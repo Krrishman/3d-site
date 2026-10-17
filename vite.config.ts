@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), glsl()],
   build: {
     rolldownOptions: {
-      input: { main: resolve(import.meta.dirname, 'index.html'), v2: resolve(import.meta.dirname, 'v2/index.html'), plumbing: resolve(import.meta.dirname, 'plumbing/index.html'), v5: resolve(import.meta.dirname, 'v5/index.html'), v6: resolve(import.meta.dirname, 'v6/index.html') },
+      input: { main: resolve(import.meta.dirname, 'index.html'), v2: resolve(import.meta.dirname, 'v2/index.html'), plumbing: resolve(import.meta.dirname, 'plumbing/index.html'), automatic: resolve(import.meta.dirname, 'automatic/index.html'), v5: resolve(import.meta.dirname, 'v5/index.html'), v6: resolve(import.meta.dirname, 'v6/index.html') },
     },
   },
 })
