@@ -8,10 +8,10 @@ const LABEL: Record<Stage, string> = { new: 'New', contacted: 'Contacted', quote
 const NEXT: Record<Stage, string> = { new: 'Mark contacted', contacted: 'Send quote', quoted: 'Mark booked', booked: 'Mark completed', completed: 'Done' }
 type Lead = { id: number; name: string; job: string; town: string; photos: number; stage: Stage }
 const START: Lead[] = [
-  { id: 1, name: 'Dana Whitfield', job: 'Replace back fence, 40 ft', town: 'Oak Hill', photos: 3, stage: 'new' },
-  { id: 2, name: 'Marcus Lee', job: 'Deck stain and repair', town: 'Riverside', photos: 5, stage: 'contacted' },
-  { id: 3, name: 'Priya Natarajan', job: 'Kitchen cabinet install', town: 'Elm Park', photos: 2, stage: 'quoted' },
-  { id: 4, name: 'Tom Okafor', job: 'Garage door frame', town: 'Oak Hill', photos: 1, stage: 'booked' },
+  { id: 1, name: 'Dana Whitfield', job: 'Website and booking for a clinic', town: 'Oak Hill', photos: 3, stage: 'new' },
+  { id: 2, name: 'Marcus Lee', job: 'Stock tool for two shops', town: 'Riverside', photos: 5, stage: 'contacted' },
+  { id: 3, name: 'Priya Natarajan', job: 'Client portal for an agency', town: 'Elm Park', photos: 2, stage: 'quoted' },
+  { id: 4, name: 'Tom Okafor', job: 'Spreadsheet to database', town: 'Oak Hill', photos: 1, stage: 'booked' },
 ]
 
 function Dashboard() {
@@ -28,7 +28,7 @@ function Dashboard() {
       </div>
       {leads.map((l) => (
         <div className="dash-row" key={l.id}>
-          <div className="dash-who"><div className="dash-name">{l.name}</div><div className="dash-job">{l.job} · {l.town} · {l.photos} photos</div></div>
+          <div className="dash-who"><div className="dash-name">{l.name}</div><div className="dash-job">{l.job} · {l.town} · {l.photos} files</div></div>
           <span className={`chip-stage chip-${l.stage}`}>{LABEL[l.stage]}</span>
           <button type="button" className="dash-btn" disabled={l.stage === 'completed'} onClick={() => advance(l.id)}>{NEXT[l.stage]}</button>
         </div>

@@ -15,18 +15,23 @@ const FORCE = process.argv.includes('--force')
 const onlyArg = process.argv.indexOf('--only')
 const ONLY = onlyArg > -1 ? process.argv[onlyArg + 1].split(',') : null
 
-const NIGHT = 'Cinematic photograph at blue hour, deep navy dusk, one warm practical light source (work lamp, van interior light, porch light) glowing copper-orange against the cold blue, volumetric haze, shallow depth of field, anamorphic feel, film grain, photoreal, no people facing camera, no text, no logos, no watermark.'
+const LOOK = 'Cinematic still, near-black teal darkness, one warm copper-orange light source against cold teal-blue rim light, volumetric haze, shallow depth of field, anamorphic feel, fine film grain, photoreal, no readable text, no logos, no watermark.'
 
 export const MANIFEST = {
   hero: {
     kind: 'video', model: 'kling-2.6/text-to-video',
     input: { sound: false, aspect_ratio: '16:9', duration: '10', prompt: 'Extreme macro cinematography: a slow river of molten copper-orange metal flows through total darkness, its surface smooth and glassy, catching cold teal-blue rim light from above. The stream glides from lower left to upper right with calm, continuous, unhurried motion, tiny glowing sparks drift upward like embers, soft volumetric haze. Very slow locked camera with a subtle push-in, shallow depth of field, photoreal, dark background with plenty of empty space in the upper half. One uninterrupted shot, no cuts, no text, no flicker.' },
   },
-  fence: { kind: 'image', aspect: '16:9', prompt: `A newly built cedar fence in a suburban back yard, one tripod work lamp lighting the fresh timber warm against the deep blue dusk sky, tools on the grass, upper half of the frame open sky. ${NIGHT}` },
-  van: { kind: 'image', aspect: '16:9', prompt: `A white plumber's van parked on a quiet residential street at blue hour, side door open and the interior lit warm, copper pipe and tool bags inside, wet asphalt reflecting the light. ${NIGHT}` },
-  garden: { kind: 'image', aspect: '4:3', prompt: `A freshly laid stone garden path with new planting, low garden lights glowing warm along it, blue dusk, a wheelbarrow at the end. ${NIGHT}` },
-  rooftop: { kind: 'image', aspect: '16:9', prompt: `A rooftop air-conditioning unit at blue hour with a technician's headlamp glow and an open tool bag, city lights soft in the far distance, seen from behind. ${NIGHT}` },
-  desk: { kind: 'image', aspect: '3:2', prompt: `A home studio desk at night: a laptop screen glowing teal-blue, a desk lamp glowing warm on a paper notebook with pencil notes and a mug, window with blue dusk behind. ${NIGHT}` },
+  // Hero candidates (stills). Pick one and it can be turned into a clip later.
+  'hero-threads': { kind: 'image', aspect: '16:9', prompt: `Thousands of thin glowing copper filaments of light converge from the dark left edge into one bright braided stream that sweeps toward the upper right, like data becoming a single signal, cold teal haze, tiny embers, upper half mostly empty darkness. ${LOOK}` },
+  'hero-glass': { kind: 'image', aspect: '16:9', prompt: `A dark glass surface seen at a low angle, with a luminous copper-orange circuit-like network of lines flowing beneath it toward a bright node in the lower right, reflections, teal rim light along the edges, upper half empty darkness. ${LOOK}` },
+  'hero-core': { kind: 'image', aspect: '16:9', prompt: `A slowly rotating torus of molten copper light suspended in dark teal space, fine particles orbiting it, soft volumetric glow, seen slightly from below, composition weighted to the right with empty darkness on the left. ${LOOK}` },
+  // Section stills: software, not trades.
+  'studio': { kind: 'image', aspect: '16:9', prompt: `A dark studio desk at night with two monitors showing an unreadable dark blue dashboard interface with charts, a copper desk lamp as the only warm light, a notebook and coffee, window with teal city dusk behind. ${LOOK}` },
+  'tablet': { kind: 'image', aspect: '16:9', prompt: `Close-up of hands holding a tablet showing an unreadable dark app interface with a list and status chips, in a dim warehouse or workshop lit by one warm lamp, teal ambient light, shallow focus. ${LOOK}` },
+  'server': { kind: 'image', aspect: '4:3', prompt: `A small server rack in a dark room, rows of tiny copper-orange and teal status lights, cables neatly routed, soft haze, shallow depth of field. ${LOOK}` },
+  'whiteboard': { kind: 'image', aspect: '3:2', prompt: `A dark meeting room at night: a glass wall covered in a hand-drawn flow diagram of boxes and arrows in marker, lit from one side by a warm lamp, teal city lights blurred behind the glass. ${LOOK}` },
+  'phone': { kind: 'image', aspect: '3:2', prompt: `A phone resting on a dark wooden counter showing an unreadable dark app with a big teal button, a warm pendant light above, a small shop or cafe at closing time blurred behind, teal dusk through the window. ${LOOK}` },
 }
 
 async function api(pathname, init = {}) {

@@ -9,7 +9,7 @@ export function Contact() {
   const [trade, setTrade] = useState(CONTACT.trades[0])
   const [problem, setProblem] = useState('')
   useReveal(root)
-  const href = `mailto:${EMAIL}?subject=${encodeURIComponent(`${trade}: ${name || 'a new enquiry'}`)}&body=${encodeURIComponent(`Hi,\n\nMy name: ${name}\nMy trade: ${trade}\nWhat slows the week down: ${problem}\n\nThanks,\n${name}`)}`
+  const href = `mailto:${EMAIL}?subject=${encodeURIComponent(`${trade}: ${name || 'a new enquiry'}`)}&body=${encodeURIComponent(`Hi,\n\nMy name: ${name}\nMy business: ${trade}\nWhat slows the week down: ${problem}\n\nThanks,\n${name}`)}`
   return (
     <section ref={root} id="contact" className="contact">
       <div className="contact-photo" aria-hidden="true"><img src={media('desk.jpg')} alt="" width={1536} height={1024} loading="lazy" /></div>
