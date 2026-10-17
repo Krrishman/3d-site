@@ -13,19 +13,20 @@ export function Contact({ preset }: { preset?: string }) {
   const mail = `mailto:${d.contact.email}?cc=${GROUP.email}&subject=${encodeURIComponent(`${d.nav}: ${name || 'enquiry'}`)}&body=${encodeURIComponent(`Hi,\n\nName: ${name}\nDivision: ${d.nav}\n\n${msg}\n\nThanks,\n${name}`)}`
   return (
     <section ref={root} id="contact" className="contact">
-      <div className="contact-inner">
-      <div className="contact-words">
-        <h2 className="contact-heading" data-reveal>{CONTACT.heading.join(' ')}</h2>
-        <p className="contact-sentence" data-reveal>{CONTACT.sentence}</p>
-        <p className="contact-or" data-reveal>Prefer to talk? <a href={GROUP.phoneHref} className="link">{GROUP.phone}</a></p>
+      <div className="contact-top">
+        <h2 className="contact-heading" data-reveal>{CONTACT.heading[0]}<br />{CONTACT.heading[1]}</h2>
+        <div className="contact-words">
+          <p className="contact-sentence" data-reveal>{CONTACT.sentence}</p>
+          <p className="contact-or" data-reveal>Prefer to talk? <a href={GROUP.phoneHref} className="link">{GROUP.phone}</a></p>
+          <p className="contact-or" data-reveal>Or write to <a href={`mailto:${GROUP.email}`} className="link">{GROUP.email}</a></p>
+        </div>
       </div>
       <form className="contact-form" data-ui data-reveal onSubmit={(e) => { e.preventDefault(); window.location.href = mail }}>
         <label className="field"><span className="small">{CONTACT.fields.name}</span><input id="c-name" name="name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} required /></label>
         <label className="field"><span className="small">{CONTACT.fields.division}</span><select id="c-div" name="division" value={div} onChange={(e) => setDiv(e.target.value)}>{DIVISIONS.map((x) => <option key={x.id} value={x.id}>{x.name.join(' ')}</option>)}</select></label>
-        <label className="field field-wide"><span className="small">{CONTACT.fields.message}</span><textarea id="c-msg" name="message" rows={3} value={msg} onChange={(e) => setMsg(e.target.value)} required /></label>
+        <label className="field field-msg"><span className="small">{CONTACT.fields.message}</span><textarea id="c-msg" name="message" rows={1} value={msg} onChange={(e) => setMsg(e.target.value)} required /></label>
         <button type="submit" className="button">{CONTACT.fields.send}</button>
       </form>
-      </div>
     </section>
   )
 }

@@ -269,5 +269,5 @@ export const CONTACT = {
   heading: ['Tell us about', 'the property.'],
   sentence: 'One call reaches every division. We reply within one working day.',
   points: ['A designer or manager visits in person', 'A written plan and price, nothing to sign first', 'Our own crews from start to finish'],
-  fields: { name: 'Your name', division: 'What you need', message: 'A few lines about the project', send: 'Send the request' },
+  fields: { name: 'Your name', division: 'What you need', message: 'About the project', send: 'Send the request' },
 }
