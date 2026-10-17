@@ -1,25 +1,28 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { damp } from 'maath/easing'
-import { LinearFilter, SRGBColorSpace, Texture, type Mesh, type ShaderMaterial } from 'three'
+import { LinearFilter, SRGBColorSpace, Texture, Vector2, type Mesh, type ShaderMaterial } from 'three'
 import { useScene } from '../store/useScene'
 import { useReducedMotion } from '../scroll/useReducedMotion'
 
 /**
- * The background: a short generated film cut into frames, scrubbed by page
- * scroll. Two textures hold the frames either side of the current position
- * and the shader blends them, so the motion stays smooth between frames.
+ * The background: a short generated film cut into 60 fps frames and scrubbed
+ * by page scroll. Frames are packed four to a sheet (2x2). Two textures hold
+ * the sheets either side of the current position and the shader blends the
+ * two cells, so the motion stays smooth between frames.
  */
-export const FRAME_COUNT = 120
+export const FRAME_COUNT = 600
+const PER_SHEET = 4
+const SHEET_COUNT = FRAME_COUNT / PER_SHEET
 const ASPECT = 16 / 9
 
-function frameUrl(set: 'hd' | 'sd', i: number) {
-  return `${import.meta.env.BASE_URL}v2/frames/${set}/${String(i).padStart(3, '0')}.webp`
+function sheetUrl(set: 'hd' | 'sd', i: number) {
+  return `${import.meta.env.BASE_URL}v2/frames/${set}/s${String(i).padStart(3, '0')}.webp`
 }
 
-/** Loads frames in order with a little concurrency; `images[i]` is set once frame i is ready. */
-function useFrameImages(set: 'hd' | 'sd') {
-  const images = useMemo<(HTMLImageElement | null)[]>(() => Array(FRAME_COUNT).fill(null), [])
+/** Loads sheets in order with a little concurrency; `sheets[i]` is set once sheet i is ready. */
+function useSheets(set: 'hd' | 'sd') {
+  const sheets = useMemo<(HTMLImageElement | null)[]>(() => Array(SHEET_COUNT).fill(null), [])
   useEffect(() => {
     let cancelled = false
     let next = 0
@@ -27,15 +30,15 @@ function useFrameImages(set: 'hd' | 'sd') {
       new Promise<void>((resolve) => {
         const img = new Image()
         img.decoding = 'async'
-        img.onload = () => { if (!cancelled) images[i] = img; resolve() }
+        img.onload = () => { if (!cancelled) sheets[i] = img; resolve() }
         img.onerror = () => resolve()
-        img.src = frameUrl(set, i)
+        img.src = sheetUrl(set, i)
       })
-    const worker = async () => { while (!cancelled && next < FRAME_COUNT) await load(next++) }
+    const worker = async () => { while (!cancelled && next < SHEET_COUNT) await load(next++) }
     Promise.all(Array.from({ length: 4 }, worker))
     return () => { cancelled = true }
-  }, [images, set])
-  return images
+  }, [sheets, set])
+  return sheets
 }
 
 const vertex = /* glsl */ `
@@ -45,13 +48,17 @@ const vertex = /* glsl */ `
 const fragment = /* glsl */ `
   uniform sampler2D texA;
   uniform sampler2D texB;
+  uniform vec2 cellA;
+  uniform vec2 cellB;
   uniform float mixAB;
   uniform float ready;
   uniform float exposure;
   varying vec2 vUv;
+  // Inset a hair so neighbouring cells never bleed in at the edges.
+  vec2 cell(vec2 uv, vec2 c) { return (clamp(uv, 0.001, 0.999) + c) * 0.5; }
   void main() {
-    vec3 a = texture2D(texA, vUv).rgb;
-    vec3 b = texture2D(texB, vUv).rgb;
+    vec3 a = texture2D(texA, cell(vUv, cellA)).rgb;
+    vec3 b = texture2D(texB, cell(vUv, cellB)).rgb;
     vec3 c = mix(a, b, mixAB) * exposure;
     // Keep the lower third quiet so the copy that sits on it reads.
     float shade = smoothstep(0.0, 0.55, vUv.y) * 0.55 + 0.45;
@@ -69,38 +76,51 @@ function makeTexture() {
   return t
 }
 
+/** Cell offset of frame i inside its sheet, in uv space (texture rows run bottom to top). */
+function cellOf(i: number, out: Vector2) {
+  const c = i % PER_SHEET
+  out.set(c % 2, 1 - Math.floor(c / 2))
+}
+
 export function Frames() {
   const mesh = useRef<Mesh>(null)
+  const material = useRef<ShaderMaterial>(null)
   const { width: vw, height: vh } = useThree((s) => s.viewport)
   const reduced = useReducedMotion()
   const set: 'hd' | 'sd' = typeof window !== 'undefined' && window.innerWidth * Math.min(window.devicePixelRatio, 1.5) >= 1400 ? 'hd' : 'sd'
-  const images = useFrameImages(set)
+  const sheets = useSheets(set)
 
-  const material = useRef<ShaderMaterial>(null)
-  const uniforms = useMemo(() => ({ texA: { value: makeTexture() }, texB: { value: makeTexture() }, mixAB: { value: 0 }, ready: { value: 0 }, exposure: { value: 1.0 } }), [])
+  const uniforms = useMemo(() => ({
+    texA: { value: makeTexture() }, texB: { value: makeTexture() },
+    cellA: { value: new Vector2() }, cellB: { value: new Vector2() },
+    mixAB: { value: 0 }, ready: { value: 0 }, exposure: { value: 1.0 },
+  }), [])
   useEffect(() => () => { uniforms.texA.value.dispose(); uniforms.texB.value.dispose() }, [uniforms])
 
   const pos = useRef(0)
   const shown = useRef<[number, number]>([-1, -1])
   const fade = useRef(0)
+  const has = (i: number) => Boolean(sheets[Math.floor(i / PER_SHEET)])
 
   useFrame((_, delta) => {
+    const u = material.current?.uniforms
+    if (!u) return
     const { progress, pointer } = useScene.getState()
     const target = progress * (FRAME_COUNT - 1)
     if (reduced) pos.current = target
-    else damp(pos, 'current', target, 0.25, delta)
+    else damp(pos, 'current', target, 0.2, delta)
     // Nearest loaded frames either side of the position.
     let a = Math.floor(pos.current)
     let b = Math.min(FRAME_COUNT - 1, a + 1)
-    while (a > 0 && !images[a]) a--
-    while (b < FRAME_COUNT - 1 && !images[b]) b++
-    if (!images[b]) b = a
-    const u = material.current?.uniforms
-    if (!u) return
-    if (images[a] && shown.current[0] !== a) { u.texA.value.image = images[a]; u.texA.value.needsUpdate = true; shown.current[0] = a }
-    if (images[b] && shown.current[1] !== b) { u.texB.value.image = images[b]; u.texB.value.needsUpdate = true; shown.current[1] = b }
+    while (a > 0 && !has(a)) a--
+    while (b < FRAME_COUNT - 1 && !has(b)) b++
+    if (!has(b)) b = a
+    const sa = Math.floor(a / PER_SHEET), sb = Math.floor(b / PER_SHEET)
+    if (sheets[sa] && shown.current[0] !== sa) { u.texA.value.image = sheets[sa]; u.texA.value.needsUpdate = true; shown.current[0] = sa }
+    if (sheets[sb] && shown.current[1] !== sb) { u.texB.value.image = sheets[sb]; u.texB.value.needsUpdate = true; shown.current[1] = sb }
+    cellOf(a, u.cellA.value); cellOf(b, u.cellB.value)
     u.mixAB.value = b > a ? Math.min(1, Math.max(0, (pos.current - a) / (b - a))) : 0
-    if (images[a]) fade.current = Math.min(1, fade.current + delta * 1.2)
+    if (has(a)) fade.current = Math.min(1, fade.current + delta * 1.2)
     u.ready.value = fade.current
     if (mesh.current) {
       // Cover the viewport with a margin, and drift a little with the pointer.

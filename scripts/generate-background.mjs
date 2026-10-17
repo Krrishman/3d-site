@@ -7,11 +7,13 @@
  *   KIE_API_KEY=... node scripts/generate-background.mjs --video a.mp4   # only cut frames from a file
  *   --model kling-2.6/text-to-video | bytedance/seedance-1.5-pro | wan/2-6-text-to-video
  *   --out <dir>   where the mp4 is kept (default scratch/background)
- *   --frames N    frames to extract (default 120)
+ *   --fps N       frames per second of footage (default 60; the clip is
+ *                 motion-interpolated up to it so the scrub stays smooth)
  *
- * Frames land in public/v2/frames/{hd,sd}/NNN.webp. Needs ffmpeg on PATH.
+ * Frames are packed four to a sheet (2x2) and land in
+ * public/v2/frames/{hd,sd}/sNNN.webp. Needs ffmpeg on PATH.
  */
-import { mkdir, writeFile, readdir, stat } from 'node:fs/promises'
+import { mkdir, writeFile, readdir, rm, stat } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 
@@ -20,7 +22,8 @@ const KEY = process.env.KIE_API_KEY
 const arg = (k, d) => { const i = process.argv.indexOf(k); return i > -1 ? process.argv[i + 1] : d }
 const MODEL = arg('--model', 'kling-2.6/text-to-video')
 const OUT = path.resolve(arg('--out', 'scratch/background'))
-const FRAMES = Number(arg('--frames', '120'))
+const FPS = Number(arg('--fps', '60'))
+const PER_SHEET = 4 // 2x2
 const VIDEO = arg('--video', null)
 const NAME = arg('--name', 'bg')
 const FRAMES_DIR = path.resolve('public/v2/frames')
@@ -68,16 +71,23 @@ async function generate() {
 async function cut(video) {
   const probe = execFileSync('ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', video]).toString().trim()
   const duration = Number(probe)
-  const fps = FRAMES / duration
-  for (const [set, w, q] of [['hd', 1440, 72], ['sd', 960, 70]]) {
+  const frames = Math.floor((Math.floor(duration * FPS)) / PER_SHEET) * PER_SHEET
+  const sheets = frames / PER_SHEET
+  // Interpolate once at the larger size, then derive the smaller set from it.
+  await rm(FRAMES_DIR, { recursive: true, force: true })
+  const tmp = path.join(OUT, 'interp.mp4')
+  console.log(`interpolating to ${FPS} fps (${frames} frames, ${sheets} sheets)...`)
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', video, '-vf', `scale=1440:-2:flags=lanczos,minterpolate=fps=${FPS}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1`, '-frames:v', String(frames), '-c:v', 'libx264', '-qp', '0', '-preset', 'veryfast', tmp], { stdio: 'inherit' })
+  for (const [set, w, q] of [['hd', 1440, 70], ['sd', 960, 68]]) {
     const dir = path.join(FRAMES_DIR, set)
     await mkdir(dir, { recursive: true })
-    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', video, '-vf', `fps=${fps},scale=${w}:-2:flags=lanczos`, '-frames:v', String(FRAMES), '-c:v', 'libwebp', '-quality', String(q), '-start_number', '0', path.join(dir, '%03d.webp')])
+    execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', tmp, '-vf', `scale=${w}:-2:flags=lanczos,tile=2x2`, '-frames:v', String(sheets), '-c:v', 'libwebp', '-quality', String(q), '-start_number', '0', path.join(dir, 's%03d.webp')])
     const files = await readdir(dir)
     let bytes = 0
     for (const f of files) bytes += (await stat(path.join(dir, f))).size
-    console.log(`${set}: ${files.length} frames, ${(bytes / 1e6).toFixed(1)} MB`)
+    console.log(`${set}: ${files.length} sheets x ${PER_SHEET} = ${files.length * PER_SHEET} frames, ${(bytes / 1e6).toFixed(1)} MB`)
   }
+  await writeFile(path.join(FRAMES_DIR, 'manifest.json'), JSON.stringify({ frames, perSheet: PER_SHEET, fps: FPS, sets: { hd: [1440, 810], sd: [960, 540] } }))
 }
 
 const video = VIDEO ? path.resolve(VIDEO) : await generate()
