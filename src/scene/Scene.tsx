@@ -4,22 +4,22 @@ import { AdaptiveDpr, Preload } from '@react-three/drei'
 import { Experience } from './Experience'
 import { Effects } from './Effects'
 
+/** Lives inside the hero's lower field, beneath the headline. */
 export default function Scene() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
-      <Canvas
-        camera={{ position: [0, 0, 6], fov: 40 }}
-        dpr={[1, 2]}
-        gl={{ antialias: false, powerPreference: 'high-performance' }}
-      >
-        <color attach="background" args={['#0b0b0d']} />
-        <Suspense fallback={null}>
-          <Experience />
-          <Effects />
-          <Preload all />
-        </Suspense>
-        <AdaptiveDpr pixelated />
-      </Canvas>
-    </div>
+    <Canvas
+      className="pointer-events-none"
+      camera={{ position: [0, 0, 6.5], fov: 35 }}
+      dpr={[1, 2]}
+      gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+      style={{ position: 'absolute', inset: 0 }}
+    >
+      <Suspense fallback={null}>
+        <Experience />
+        <Effects />
+        <Preload all />
+      </Suspense>
+      <AdaptiveDpr pixelated />
+    </Canvas>
   )
 }
