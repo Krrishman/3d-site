@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useReveal } from '../scroll/useReveal'
 import { useWords } from '../scroll/useWords'
-import { GROUP, type Division } from '../content'
+import type { Division } from '../content'
 import { Contact } from '../ui/Contact'
 
 /** One division: hero, statement and figures, six services, what is included, two pictures, how a job runs, questions, the form. */
