@@ -16,6 +16,8 @@
 }
 
 :root { color-scheme: dark; }
+/* Set on body and #root as well as html, so a host page's own body rule cannot override them. */
+body, #root { background: var(--color-navy); color: var(--color-paper); }
 
 html {
   background: var(--color-navy);
