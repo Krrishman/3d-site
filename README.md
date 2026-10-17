@@ -10,11 +10,23 @@ npm run dev
 
 See `CLAUDE.md` for the architecture and conventions.
 
-## Two versions
+## Three versions
 
 - `/` is the original site (`src/`). It is kept as a backup and is not being changed.
-- `/v2/` is the new site (`src/v2/`): a scroll-scrubbed film background, dust
+- `/v2/` (`src/v2/`): dark, with a scroll-scrubbed film background, dust
   particles that part around the pointer, and much shorter copy.
+- `/v3/` (`src/v3/`): light and editorial. A full-bleed job-site photograph as
+  the hero with a trade picker, work laid out like prints on a gallery wall,
+  Zodiak and Hanken Grotesk, and generated photographs of the trades' world.
+
+## Generating the photographs (v3)
+
+```sh
+KIE_API_KEY=your-key node scripts/generate-photos.mjs
+```
+
+Writes the eight job-site and process photographs to `public/v3/photos/`.
+The prompts live in the script; `--only hero-fence` regenerates one.
 
 ## Generating the background (v2)
 
