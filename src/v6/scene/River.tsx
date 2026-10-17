@@ -13,7 +13,7 @@ const FRAG = `
 precision highp float;
 uniform vec2 uRes; uniform float uTime; uniform float uScroll; uniform float uLight;
 uniform vec3 uBg; uniform vec3 uBg2; uniform vec3 uHot; uniform vec3 uWarm; uniform vec3 uCool;
-uniform sampler2D uVideo; uniform float uHasVideo; uniform float uVideoAspect;
+uniform sampler2D uVideo; uniform float uHasVideo; uniform float uVideoAspect; uniform vec2 uPointer;
 float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
   return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
@@ -24,7 +24,8 @@ void main(){
   float aspect = uRes.x / uRes.y;
   // Page space: y grows downward as you scroll. One unit = one viewport height.
   float py = (1.0 - uv.y) + uScroll;
-  float px = uv.x * aspect;
+  float px = (uv.x - uPointer.x * 0.012) * aspect;
+  py += uPointer.y * 0.008;
   // The river's centre line meanders slowly down the page. It starts where the
   // film's lava leaves the bottom of the hero (about a fifth of the way in from the left).
   float t = py - 1.0;
@@ -75,9 +76,11 @@ void main(){
   // over to the drawn river across the last fifth of the first screen.
   if (uHasVideo > 0.5 && py < 1.05) {
     // Cover-fit the 16:9 film to the viewport.
+    // Zoomed in a touch and leaning with the pointer, like a camera on a slow gimbal.
     vec2 vuv = vec2(uv.x, py);
     float sa = aspect / uVideoAspect;
     if (sa > 1.0) { vuv.y = (vuv.y - 0.5) / sa + 0.5; } else { vuv.x = (vuv.x - 0.5) * sa + 0.5; }
+    vuv = (vuv - 0.5) / 1.08 + 0.5 + vec2(-uPointer.x * 0.014, -uPointer.y * 0.009);
     vec3 film = texture2D(uVideo, clamp(vuv, 0.0, 1.0)).rgb;
     // A soft shade where the headline and buttons sit, so the type reads over the lava.
     float shade = smoothstep(0.38, 1.0, py) * (1.0 - smoothstep(0.35, 0.75, uv.x)) * 0.62;
@@ -114,7 +117,12 @@ export function River() {
     const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
     const u = (n: string) => gl.getUniformLocation(prog, n)
     const uRes = u('uRes'), uTime = u('uTime'), uScroll = u('uScroll'), uLight = u('uLight')
-    const uVideo = u('uVideo'), uHasVideo = u('uHasVideo'), uVideoAspect = u('uVideoAspect')
+    const uVideo = u('uVideo'), uHasVideo = u('uHasVideo'), uVideoAspect = u('uVideoAspect'), uPointer = u('uPointer')
+    // Pointer, -1..1 from the centre, eased per frame.
+    let tx = 0, ty = 0, sx = 0, sy = 0
+    const onMove = (e: PointerEvent) => { tx = (e.clientX / innerWidth) * 2 - 1; ty = (e.clientY / innerHeight) * 2 - 1 }
+    const onLeave = () => { tx = 0; ty = 0 }
+    if (!reduced) { addEventListener('pointermove', onMove, { passive: true }); document.addEventListener('pointerleave', onLeave) }
     // The film. Only used on the dark palette; the light ones keep the drawn river.
     const video = document.createElement('video')
     video.muted = true; video.loop = true; video.playsInline = true; video.preload = 'auto'; video.crossOrigin = 'anonymous'
@@ -155,6 +163,8 @@ export function River() {
       smooth += (target - smooth) * 0.12
       gl.uniform1f(uTime, reduced ? 0 : (now - t0) / 1000)
       gl.uniform1f(uScroll, smooth)
+      sx += (tx - sx) * 0.06; sy += (ty - sy) * 0.06
+      gl.uniform2f(uPointer, sx, sy)
       if (dark && !reduced && video.readyState >= 2 && !video.paused) {
         gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video)
         if (!videoReady) { videoReady = true; gl.uniform1f(uHasVideo, 1) }
@@ -163,7 +173,7 @@ export function River() {
       raf = requestAnimationFrame(frame)
     }
     raf = requestAnimationFrame(frame)
-    return () => { cancelAnimationFrame(raf); removeEventListener('resize', resize); mo.disconnect(); document.removeEventListener('visibilitychange', onVis); video.pause(); video.removeAttribute('src'); video.load() }
+    return () => { cancelAnimationFrame(raf); removeEventListener('resize', resize); mo.disconnect(); document.removeEventListener('visibilitychange', onVis); removeEventListener('pointermove', onMove); document.removeEventListener('pointerleave', onLeave); video.pause(); video.removeAttribute('src'); video.load() }
   }, [reduced])
   return <canvas ref={ref} className="river" aria-hidden="true" />
 }
