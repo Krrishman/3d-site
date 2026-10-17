@@ -418,7 +418,16 @@ strong { font-weight: 600; }
 .qa-plus::after { transform: translate(-50%, -50%) rotate(90deg); }
 .qa-item.is-open .qa-plus::after { transform: translate(-50%, -50%) rotate(0); }
 .qa-a { padding: 0 0 20px; color: var(--muted); max-width: 60ch; }
-.contact .points { margin-top: 22px; }
+/* contact, compact */
+.contact { padding: calc(var(--section) * 0.8) var(--margin); grid-template-columns: repeat(12, 1fr); align-items: start; }
+.contact-words { grid-column: 1 / 5; }
+.contact-heading { font-size: clamp(1.9rem, 2.8vw, 2.6rem); font-weight: 300; line-height: 1.05; }
+.contact-sentence { margin-top: 14px; font-size: 1.05rem; color: var(--muted); max-width: 30ch; }
+.contact-or { margin-top: 16px; font-size: 1rem; color: var(--muted); }
+.contact-form { grid-column: 6 / 12; gap: 14px var(--gutter); }
+.field input, .field select, .field textarea { min-height: 44px; padding: 10px 12px; font-size: 16px; }
+.field textarea { min-height: 88px; }
+.contact-form .button { min-height: 44px; padding: 0 20px; }
 
 /* footer, compact */
 .footer { padding: 56px var(--margin) 24px; min-height: 0; }
