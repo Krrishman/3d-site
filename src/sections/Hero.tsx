@@ -1,56 +1,38 @@
-import { lazy, Suspense, useEffect, useRef } from 'react'
-import { ScrollTrigger } from '../scroll/gsap'
+import { useEffect, useRef } from 'react'
+import { useStage } from '../scroll/useStage'
 import { useScene } from '../store/useScene'
-import { FlowMark } from '../ui/FlowMark'
-import { ACTION, BOOK_HREF } from '../content'
-
-const Scene = lazy(() => import('../scene/Scene'))
+import { BOOK_HREF, HERO } from '../content'
 
 export function Hero() {
   const root = useRef<HTMLElement>(null)
-  const setHeroProgress = useScene((s) => s.setHeroProgress)
+  useStage(root, 0)
+  const setPointer = useScene((s) => s.setPointer)
 
   useEffect(() => {
-    if (!root.current) return
-    const trigger = ScrollTrigger.create({
-      trigger: root.current,
-      start: 'top top',
-      end: 'bottom top',
-      onUpdate: (self) => setHeroProgress(self.progress),
-    })
-    return () => trigger.kill()
-  }, [setHeroProgress])
-
+    const onMove = (e: PointerEvent) => setPointer((e.clientX / window.innerWidth) * 2 - 1, (e.clientY / window.innerHeight) * 2 - 1)
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [setPointer])
 
   return (
-    <section ref={root} className="relative h-svh min-h-[640px] overflow-hidden bg-paper text-navy">
-      <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4 md:p-7">
-        <a href="#top" className="flex items-center gap-2.5 whitespace-nowrap text-s1 font-extrabold tracking-tight md:text-s2" aria-label="FlowForge Digital, home">
-          <FlowMark className="h-6 w-6 text-blue md:h-7 md:w-7" />
-          <span>FlowForge Digital</span>
-        </a>
-        <a href={BOOK_HREF} className="action action-blue bg-blue text-paper min-h-11 whitespace-nowrap px-3.5 text-s1 md:min-h-14 md:px-6 md:text-s2">{ACTION}</a>
-      </header>
-
-      {/* Lower field, with the 3D mark beneath the headline. */}
-      <div className="absolute inset-x-0 bottom-0 top-[46svh] bg-teal md:top-1/2">
-        <Suspense fallback={null}>
-          <Scene />
-        </Suspense>
-      </div>
-
-      <h1 className="waterline">
-        <span className="line"><span data-line style={{ '--i': 0 } as React.CSSProperties}>Make work</span></span>
-        <span className="line"><span data-line data-below="Flow" style={{ '--i': 1 } as React.CSSProperties}>Flow</span></span>
+    <section ref={root} id="top" className="relative flex min-h-svh flex-col justify-end px-5 pb-16 pt-32 md:px-10 md:pb-24">
+      <p data-rise style={{ '--i': 0 } as React.CSSProperties} className="eyebrow mb-6">{HERO.wordmark}</p>
+      <h1 data-rise style={{ '--i': 1 } as React.CSSProperties} className="max-w-[14ch] text-[clamp(2.75rem,7vw,6.75rem)] leading-[0.95]">
+        {HERO.headline[0]}
+        <br />
+        <span className="text-teal glow-teal">{HERO.headline[1]}</span>
       </h1>
-
-      <p
-        data-rise
-        className="absolute bottom-10 left-4 right-4 z-20 max-w-[36rem] text-navy md:left-1/2 md:right-auto md:-translate-x-1/2 md:text-center"
-      >
-        Custom websites and business apps that help local businesses capture more leads, organize their work and
-        replace spreadsheet chaos.
+      <p data-rise style={{ '--i': 2 } as React.CSSProperties} className="mt-8 max-w-[34rem] text-lg text-mist md:text-xl">
+        {HERO.body}
       </p>
+      <div data-rise style={{ '--i': 3 } as React.CSSProperties} className="mt-10 flex flex-wrap gap-3">
+        <a href={BOOK_HREF} className="btn btn-primary">{HERO.primary}</a>
+        <a href="#demo" className="btn btn-ghost">{HERO.secondary}</a>
+      </div>
+      <div data-rise style={{ '--i': 4 } as React.CSSProperties} className="pointer-events-none absolute bottom-6 right-5 hidden items-center gap-3 text-xs font-semibold tracking-[0.2em] text-mist uppercase md:flex md:right-10">
+        Scroll
+        <span className="block h-10 w-px bg-gradient-to-b from-teal to-transparent" />
+      </div>
     </section>
   )
 }

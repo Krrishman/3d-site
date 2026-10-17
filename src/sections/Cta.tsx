@@ -1,22 +1,28 @@
 import { useRef } from 'react'
+import { useStage } from '../scroll/useStage'
 import { useReveal } from '../scroll/useReveal'
-import { ACTION, BOOK_HREF } from '../content'
+import { BOOK_HREF, CTA, EMAIL, SITE } from '../content'
+import { FlowMark } from '../ui/FlowMark'
 
 export function Cta() {
   const root = useRef<HTMLElement>(null)
-  useReveal(root, '[data-part]', 'lines')
+  useStage(root, 5)
+  useReveal(root)
   return (
-    <section ref={root} className="relative flex min-h-[80svh] flex-col justify-between bg-navy px-4 pb-10 pt-24 text-paper md:min-h-[90svh] md:px-7 md:pb-10 md:pt-32">
-      <h2 data-part className="max-w-[12ch] text-[12vw] leading-[0.9] md:text-s5">
-        Your business, easier to run
-      </h2>
-      <div className="grid grid-cols-1 items-end gap-8 md:grid-cols-12">
-        <p data-part className="text-s2 md:col-span-5">
-          A free 15-minute workflow review. Tell me what is frustrating you, and we will see whether a better
-          system can help. No pressure either way.
-        </p>
-        <a data-part href={BOOK_HREF} className="action action-blue bg-blue text-paper w-full md:col-span-3 md:col-start-10">{ACTION}</a>
+    <section ref={root} className="relative flex min-h-svh flex-col justify-between px-5 pt-32 pb-8 md:px-10">
+      <div>
+        <h2 data-reveal className="max-w-[16ch] text-[clamp(2.5rem,5.4vw,5.25rem)] leading-[0.98] md:max-w-[24ch]">{CTA.headline}</h2>
+        <p data-reveal className="mt-8 max-w-[34rem] text-lg text-mist md:text-xl">{CTA.body}</p>
+        <a data-reveal href={BOOK_HREF} className="btn btn-primary mt-10 min-h-14 px-8 text-lg">{CTA.button}</a>
       </div>
+      <footer className="mt-24 flex flex-col gap-6 border-t border-white/10 pt-6 text-sm text-mist md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-2.5 font-bold text-paper"><FlowMark className="h-5 w-5 text-teal" />FlowForge Digital</div>
+        <div className="flex flex-wrap gap-x-8 gap-y-2">
+          <a className="hover:text-paper" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+          <span>{SITE}</span>
+          <span>Websites · Dashboards · Automations · Inventory · Client Portals · Data Tools</span>
+        </div>
+      </footer>
     </section>
   )
 }

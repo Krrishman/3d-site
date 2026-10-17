@@ -1,24 +1,30 @@
+import { lazy, Suspense } from 'react'
 import { SmoothScroll } from './scroll/SmoothScroll'
+import { Nav } from './ui/Nav'
 import { Hero } from './sections/Hero'
-import { Intro } from './sections/Intro'
-import { Features } from './sections/Features'
-import { Showcase } from './sections/Showcase'
-import { HowItWorks } from './sections/HowItWorks'
+import { Problems } from './sections/Problems'
+import { Services } from './sections/Services'
+import { Demo } from './sections/Demo'
+import { Process } from './sections/Process'
 import { Cta } from './sections/Cta'
-import { Footer } from './sections/Footer'
+
+const Scene = lazy(() => import('./scene/Scene'))
 
 export default function App() {
   return (
     <SmoothScroll>
-      <main id="top">
+      <Suspense fallback={null}>
+        <Scene />
+      </Suspense>
+      <Nav />
+      <main className="relative z-10">
         <Hero />
-        <Intro />
-        <Features />
-        <Showcase />
-        <HowItWorks />
+        <Problems />
+        <Services />
+        <Demo />
+        <Process />
         <Cta />
       </main>
-      <Footer />
     </SmoothScroll>
   )
 }
