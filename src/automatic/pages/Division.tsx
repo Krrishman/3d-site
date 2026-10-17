@@ -8,7 +8,7 @@ import { Contact } from '../ui/Contact'
 export function DivisionPage({ d }: { d: Division }) {
   const a = useRef<HTMLElement>(null), b = useRef<HTMLElement>(null), c = useRef<HTMLElement>(null), e = useRef<HTMLElement>(null), f = useRef<HTMLElement>(null)
   useReveal(a); useReveal(b); useReveal(c); useReveal(e); useReveal(f); useWords(a)
-  const [open, setOpen] = useState(0)
+  const [open, setOpen] = useState(-1)
   const i = (n: number) => ({ '--i': n } as React.CSSProperties)
   return (
     <>
@@ -73,9 +73,6 @@ export function DivisionPage({ d }: { d: Division }) {
       <section ref={f} className="questions">
         <div className="section-head">
           <h2 className="h-section" data-reveal>Questions we are asked</h2>
-          <p className="division-links small" data-reveal>
-            <a href={d.contact.phoneHref} className="link">{d.contact.phone}</a> · <a href={`mailto:${d.contact.email}`} className="link">{d.contact.email}</a>
-          </p>
         </div>
         <ul className="qa">
           {d.faq.map((it, n) => {

@@ -70,11 +70,11 @@ const crew = 'Every job is done by our own crews, planned by our own designers, 
 export const DIVISIONS: Division[] = [
   {
     id: 'sprinklers', nav: 'Sprinklers', brand: 'Automatic Irrigation Design',
-    name: ['Lawn', 'sprinklers'], tagline: 'The first thing the family ever built, and still the biggest.',
+    name: ['Lawn', 'Sprinklers'], tagline: 'The first thing the family ever built, and still the biggest.',
     intro: 'Design, installation and year-round service of irrigation systems for homes, estates and commercial properties, with full-time technicians rather than subcontractors and a 24-hour emergency line.',
     intro2: crew,
     hero: photo('sprinklers-hero'), heroAlt: 'Sprinklers throwing arcs of water across an estate lawn at dawn',
-    stats: [{ value: '41,637', label: 'systems installed' }, { value: '10,218', label: 'services a year' }, { value: '534', label: 'five-star reviews' }, { value: '24 hr', label: 'emergency line' }],
+    stats: [{ value: '41,637', label: 'systems' }, { value: '10,218', label: 'services a year' }, { value: '534', label: 'five-star reviews' }, { value: '24 hr', label: 'emergency line' }],
     services: [
       { title: 'Residential systems', body: 'Designed for the property, zoned for sun, shade, slope and planting, and tuned each season so beds and lawn get what they need and nothing more.' },
       { title: 'Commercial and institutional', body: 'Campuses, clubs, condominiums and municipal grounds, with service contracts, reporting and the trucks to keep them green.' },
@@ -103,11 +103,11 @@ export const DIVISIONS: Division[] = [
   },
   {
     id: 'courts', nav: 'Courts', brand: 'Tennis Planning Corp.',
-    name: ['Tennis &', 'pickleball courts'], tagline: 'Enjoy the love game in your own backyard.',
+    name: ['Tennis &', 'Pickleball Courts'], tagline: 'Enjoy the love game in your own backyard.',
     intro: 'Design, construction and resurfacing of private and club courts across Long Island, from red clay and Har-Tru to cushioned hard courts and dedicated pickleball, with fencing, lighting and windscreens.',
     intro2: crew,
     hero: photo('courts-hero'), heroAlt: 'A private red clay tennis court among oaks on an estate',
-    stats: [{ value: '1,018', label: 'courts built and serviced' }, { value: '64', label: 'years on Long Island' }, { value: '3', label: 'surfaces: clay, Har-Tru, hard' }, { value: 'McEnroe', label: 'is a repeat client' }],
+    stats: [{ value: '1,018', label: 'courts' }, { value: '64', label: 'years' }, { value: '3', label: 'surfaces: clay, Har-Tru, hard' }, { value: 'McEnroe', label: 'is a repeat client' }],
     services: [
       { title: 'New courts', body: 'Site work, drainage, stone base and surface, built to the specification of the game you play and the ground you have.' },
       { title: 'Red clay and Har-Tru', body: 'The surfaces the clubs ask for, with sub-surface irrigation and the daily and seasonal maintenance that keeps them playing true.' },
@@ -136,11 +136,11 @@ export const DIVISIONS: Division[] = [
   },
   {
     id: 'pools', nav: 'Pools', brand: 'Tennis Planning Corp.',
-    name: ['Gunite', 'swimming pools'], tagline: 'Any shape, any depth, built to outlast the house.',
+    name: ['Gunite', 'Swimming Pools'], tagline: 'Any shape, any depth, built to outlast the house.',
     intro: 'Custom gunite pools and spas designed with landscape architects and engineers, built by in-house crews, and restored when older pools need a new life.',
     intro2: crew,
     hero: photo('pools-hero'), heroAlt: 'A gunite pool with a spillover spa at dusk',
-    stats: [{ value: '536', label: 'pools built and restored' }, { value: '50+', label: 'years building pools' }, { value: '100%', label: 'custom, no kits' }, { value: 'Award', label: 'winning design' }],
+    stats: [{ value: '536', label: 'pools' }, { value: '50+', label: 'years' }, { value: '100%', label: 'custom, no kits' }, { value: 'Award', label: 'winning design' }],
     services: [
       { title: 'New gunite pools', body: 'Steel-reinforced shells sprayed in place, in any shape, depth or size, finished with a tile band and a marble-coated interior.' },
       { title: 'Spas and water features', body: 'Spillover spas, beach entries, sun shelves, fire and water bowls, waterfalls, swim-up bars, deck jets and bubblers.' },
@@ -168,11 +168,11 @@ export const DIVISIONS: Division[] = [
   },
   {
     id: 'landscape', nav: 'Landscape', brand: 'Tennis Planning Corp.',
-    name: ['Fine landscaping', '& custom masonry'], tagline: 'You paint a portrait. We turn it landscape.',
+    name: ['Fine Landscaping', '& Masonry'], tagline: 'You paint a portrait. We turn it landscape.',
     intro: 'Landscape design and planning by experienced landscape architects, built with stone, planting, drainage and lighting that are meant to last, and to last beautifully.',
     intro2: crew,
     hero: photo('landscape-hero'), heroAlt: 'A bluestone path through a layered estate garden',
-    stats: [{ value: '64', label: 'years of gardens' }, { value: 'Award', label: 'winning design' }, { value: 'In-house', label: 'architects, crews, masons' }, { value: '4', label: 'seasons planned for' }],
+    stats: [{ value: '64', label: 'years' }, { value: 'Award', label: 'winning' }, { value: 'In-house', label: 'architects, crews, masons' }, { value: '4', label: 'seasons planned for' }],
     services: [
       { title: 'Landscape architecture', body: 'Plans that suit the house, modern or classic, sketched at every stage so you see the garden before it is built.' },
       { title: 'Planting design', body: 'Plants chosen to harmonise with each other and the site, staggered to flower across the seasons, and safe where children and pets play.' },
@@ -201,11 +201,11 @@ export const DIVISIONS: Division[] = [
   },
   {
     id: 'construction', nav: 'Construction', brand: 'Stewart Senter Inc.',
-    name: ['Construction', 'management'], tagline: 'Exceptional service. Extraordinary homes.',
+    name: ['Construction', 'Management'], tagline: 'Exceptional service. Extraordinary homes.',
     intro: 'New homes, major renovations and estate projects managed from first drawing to final walkthrough, by the family that has been building on Long Island since 1958.',
     intro2: 'One manager from first drawing to final walkthrough, trusted trades, open books, and the same phone number afterwards.',
     hero: photo('construction-hero'), heroAlt: 'A newly completed shingle-style house at golden hour',
-    stats: [{ value: '1958', label: 'building since' }, { value: 'One', label: 'point of contact' }, { value: 'Weekly', label: 'photo reports' }, { value: 'Open', label: 'book on cost' }],
+    stats: [{ value: '1958', label: 'since' }, { value: 'One', label: 'manager' }, { value: 'Weekly', label: 'photo reports' }, { value: 'Open', label: 'book on cost' }],
     services: [
       { title: 'New homes', body: 'Ground-up construction with your architect, or one we introduce, from permits to keys.' },
       { title: 'Renovations and additions', body: 'Kitchens, wings, second storeys and whole-house renovations, phased so you can live through them.' },
@@ -233,11 +233,11 @@ export const DIVISIONS: Division[] = [
   },
   {
     id: 'realestate', nav: 'Real estate', brand: 'Automatic Real Estate Associates',
-    name: ['Real estate', 'brokerage'], tagline: 'Make it Automatic.',
+    name: ['Real Estate', 'Brokerage'], tagline: 'Make it Automatic.',
     intro: 'Residential sales and exclusive listings on the North Shore and across Long Island, from a brokerage that knows what a property is worth because the family has built so many of them.',
     intro2: 'A brokerage inside a building group: we know what a house costs to build, to fix and to run, and we price it accordingly.',
     hero: photo('realestate-hero'), heroAlt: 'A brick Georgian colonial on a tree-lined lane',
-    stats: [{ value: '11', label: 'North Shore villages' }, { value: 'BBB', label: 'accredited' }, { value: 'Exclusive', label: 'listings' }, { value: '1958', label: 'family on the Island since' }],
+    stats: [{ value: '11', label: 'villages' }, { value: 'BBB', label: 'accredited' }, { value: 'Exclusive', label: 'listings' }, { value: '1958', label: 'family on the Island since' }],
     services: [
       { title: 'Selling', body: 'Pricing grounded in construction knowledge, presentation and a buyer network built over decades.' },
       { title: 'Buying', body: 'Off-market and exclusive listings, and an honest read on what a house will cost to own.' },

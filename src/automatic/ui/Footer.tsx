@@ -17,7 +17,8 @@ export function Footer() {
           </ul>
         </div>
         <div />
-        <ul className="footer-cols" aria-label="Divisions">{DIVISIONS.map((d) => <li key={d.id}><a href={href(d.id)} className="link">{d.name.join(' ')}</a></li>)}</ul>
+        <ul className="footer-cols" aria-label="Divisions">{DIVISIONS.slice(0, 3).map((d) => <li key={d.id}><a href={href(d.id)} className="link">{d.name.join(' ')}</a></li>)}</ul>
+        <ul className="footer-cols" aria-label="More divisions">{DIVISIONS.slice(3).map((d) => <li key={d.id}><a href={href(d.id)} className="link">{d.name.join(' ')}</a></li>)}</ul>
         <ul className="footer-cols" aria-label="Elsewhere">{GROUP.social.map((s) => <li key={s.label}><a href={s.href} className="link" target="_blank" rel="noreferrer">{s.label}</a></li>)}<li><a href={href('')} className="link">The group</a></li></ul>
       </div>
       <div className="footer-legal small"><span>© {YEAR} {GROUP.name}</span><a href="#top" className="link">Back to top</a></div>
