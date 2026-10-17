@@ -1,13 +1,13 @@
 import { RENDERS } from '../renders.generated'
 
-/** Copy deck for the v3 site. Every headline fits two lines at every width. */
+/** Copy deck for the plumbing template. Every headline fits two lines at every width. */
 export const EMAIL = 'hello@flowforgedigital.com'
 export const SITE = 'flowforgedigital.com'
 export const BOOK_HREF = `mailto:${EMAIL}?subject=${encodeURIComponent('Free 15-minute call')}&body=${encodeURIComponent('Hi,\n\nMy trade: \nWhat slows the week down: \nA good time to call: \n\nThanks,')}`
 export const BOOK = 'Book a free call'
 
 const base = import.meta.env.BASE_URL
-const photo = (name: string) => `${base}v3/photos/${name}.jpg`
+const photo = (name: string) => `${base}plumbing/photos/${name}.jpg`
 const render = (id: string) => (RENDERS[id] ? base + RENDERS[id].replace(/^\//, '') : '')
 
 export const NAME = ['FlowForge', 'Digital']

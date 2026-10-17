@@ -13,12 +13,14 @@ A smooth-scroll 3D marketing site. Vite, React 19, TypeScript, Tailwind v4.
 - The v2 background is a generated film cut into frames (`public/v2/frames`),
   scrubbed by scroll in `src/v2/scene/Frames.tsx`. Regenerate it with
   `scripts/generate-background.mjs` (Kie.ai, needs `KIE_API_KEY`).
-- `v3/index.html` + `src/v3/` is the light editorial version, built with the
-  `design-taste-frontend` skill's house rules (no gradients, glass, eyebrows,
-  numbering or thin rules; headlines two lines max). It uses plain CSS, not
-  Tailwind, and no WebGL. Its photographs come from
-  `scripts/generate-photos.mjs`; its fonts are self-hosted in `public/v3/fonts`.
-  Check it with the skill's `lint.mjs` and `inspect.mjs` after changes.
+- `plumbing/index.html` + `src/plumbing/` is the light editorial template,
+  frozen for a separate plumbing client. Do not change it unless asked.
+- `v4/index.html` + `src/v4/` is the current FlowForge site, built on that
+  template with the `design-taste-frontend` skill's house rules (no gradients,
+  glass, eyebrows, numbering or thin rules; headlines two lines max). Plain
+  CSS, no Tailwind, no WebGL. Photographs come from `scripts/generate-photos.mjs`
+  into `public/v4/photos`; fonts are self-hosted in `public/v4/fonts`. Check it
+  with the skill's `lint.mjs` and `inspect.mjs` after changes.
 
 ## Stack and who owns what
 

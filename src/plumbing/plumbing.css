@@ -1,8 +1,8 @@
 @import '@fontsource-variable/hanken-grotesk';
 
 /* Zodiak (Indian Type Foundry, via Fontshare), self-hosted. */
-@font-face { font-family: 'Zodiak'; src: url('/v3/fonts/zodiak-100.woff2') format('woff2'); font-weight: 100; font-display: swap; }
-@font-face { font-family: 'Zodiak'; src: url('/v3/fonts/zodiak-300.woff2') format('woff2'); font-weight: 300; font-display: swap; }
+@font-face { font-family: 'Zodiak'; src: url('/plumbing/fonts/zodiak-100.woff2') format('woff2'); font-weight: 100; font-display: swap; }
+@font-face { font-family: 'Zodiak'; src: url('/plumbing/fonts/zodiak-300.woff2') format('woff2'); font-weight: 300; font-display: swap; }
 
 /* ---------- tokens: brand colours on a pale ground, the dealt type system ---------- */
 :root {

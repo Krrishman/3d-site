@@ -15,18 +15,22 @@ See `CLAUDE.md` for the architecture and conventions.
 - `/` is the original site (`src/`). It is kept as a backup and is not being changed.
 - `/v2/` (`src/v2/`): dark, with a scroll-scrubbed film background, dust
   particles that part around the pointer, and much shorter copy.
-- `/v3/` (`src/v3/`): light and editorial. A full-bleed job-site photograph as
-  the hero with a trade picker, work laid out like prints on a gallery wall,
-  Zodiak and Hanken Grotesk, and generated photographs of the trades' world.
+- `/plumbing/` (`src/plumbing/`): the light editorial template, frozen as a
+  starting point for a separate plumbing client's site. Do not change it.
+- `/v4/` (`src/v4/`): the current FlowForge site, built on that theme. A
+  full-bleed job-site photograph as the hero with a trade picker, a proper
+  navigation bar, work laid out like prints on a gallery wall, a questions
+  section and a contact form. Zodiak and Hanken Grotesk, self-hosted.
 
-## Generating the photographs (v3)
+## Generating the photographs
 
 ```sh
 KIE_API_KEY=your-key node scripts/generate-photos.mjs
 ```
 
-Writes the eight job-site and process photographs to `public/v3/photos/`.
-The prompts live in the script; `--only hero-fence` regenerates one.
+Writes the eight job-site and process photographs to `public/v4/photos/`
+(copy them to `public/plumbing/photos/` if that site needs them). The prompts
+live in the script; `--only hero-fence` regenerates one.
 
 ## Generating the background (v2)
 
