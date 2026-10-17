@@ -31,7 +31,7 @@ export function Hub() {
       </section>
 
       <section ref={root} id="divisions" className="work band">
-        <div className="work-grid">
+        <div className="work-grid ag-grid">
           <div className="work-head" style={{ gridArea: 't' }}>
             <h2 className="work-heading" data-reveal>Six<br />divisions</h2>
             <p className="work-intro" data-reveal>Each with its own crews, its own craft and its own page. Choose one.</p>
