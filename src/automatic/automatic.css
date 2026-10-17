@@ -470,3 +470,20 @@ strong { font-weight: 600; }
 /* nav: short names in the desktop bar, full names in the phone menu */
 .nav-full { display: none; }
 @media (max-width: 900px) { .nav-short { display: none; } .nav-full { display: inline; } }
+
+/* division cards: two across on tablets, compact rows with a thumbnail on phones */
+@media (max-width: 900px) {
+  .div-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
+  .div-title { font-size: 1.35rem; }
+  .div-stats { flex-wrap: wrap; gap: 6px 14px; white-space: normal; }
+}
+@media (max-width: 600px) {
+  .div-grid { grid-template-columns: 1fr; gap: 0; border-top: 1px solid rgba(238, 241, 244, 0.14); }
+  .div-card { border-bottom: 1px solid rgba(238, 241, 244, 0.14); }
+  .div-link { grid-template-columns: 112px 1fr; align-items: center; gap: 16px; padding: 14px 0; }
+  .div-link:hover { transform: none; }
+  .div-pic { aspect-ratio: 4 / 3; width: 112px; }
+  .div-row { flex-wrap: wrap; gap: 4px 10px; }
+  .div-title { font-size: 1.25rem; line-height: 1.1; }
+  .div-stats { margin-top: 4px; }
+}
