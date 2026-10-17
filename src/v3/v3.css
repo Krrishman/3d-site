@@ -256,7 +256,7 @@ strong { font-weight: 600; }
   .cta-sentence { font-size: 18px; }
   .cta .button { min-height: 44px; }
   .footer { padding: 48px 20px 32px; min-height: 0; }
-  .footer-name { font-size: 15vw; white-space: normal; line-height: 0.95; }
+  .footer-name { font-size: 13.5vw; white-space: normal; line-height: 0.95; }
   .footer-row { display: flex; flex-direction: column; gap: 32px; margin-top: 40px; }
   .footer-places { font-size: 22px; }
   .footer-cols { grid-template-columns: 1fr 1fr; }
