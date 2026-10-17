@@ -343,14 +343,17 @@ strong { font-weight: 600; }
 .divisions { padding: var(--section) var(--margin); }
 .divisions .lead { color: var(--field-1-muted); }
 .div-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px var(--gutter); }
-.div-link { display: grid; gap: 16px; text-decoration: none; color: inherit; }
+.divisions-heading { margin-bottom: 40px; }
+.div-link { display: grid; gap: 14px; text-decoration: none; color: inherit; transition: transform 500ms var(--ease-soft); }
+.div-link:hover { transform: translateY(-8px); }
 .div-pic { aspect-ratio: 4 / 3; overflow: clip; background: #121b2e; }
 .div-pic img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-soft); }
 .div-link:hover .div-pic img { transform: scale(1.04); }
-.div-row { display: flex; justify-content: space-between; color: var(--field-1-muted); }
-.div-title { font-size: 1.7rem; font-weight: 300; margin-top: 2px; }
+.div-row { display: flex; align-items: baseline; gap: 14px; }
+.muted-dark { color: var(--field-1-muted); }
+.div-title { font-size: 1.7rem; font-weight: 300; }
 .div-line { color: var(--field-1-muted); margin-top: 4px; }
-.div-stats { display: flex; gap: 18px; margin-top: 10px; color: var(--field-1-muted); }
+.div-stats { display: flex; gap: 18px; color: var(--field-1-muted); }
 .div-stats strong { color: var(--field-1-ink); font-weight: 500; }
 .div-go { margin-top: 10px; font-size: 0.95rem; font-weight: 500; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.25em; transition: text-decoration-color var(--t-hover) ease; }
 .div-link:hover .div-go { text-decoration-color: currentColor; }
@@ -423,7 +426,7 @@ strong { font-weight: 600; }
 .footer-name { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.6rem, 2.4vw, 2.2rem); line-height: 1.05; text-transform: none; letter-spacing: 0; white-space: normal; }
 .footer-tag { margin-top: 8px; color: var(--field-1-muted); }
 .footer-addr { margin-top: 18px; font-size: 1rem; max-width: 22ch; }
-.footer-reach { display: grid; gap: 6px; font-size: 1rem; }
+.footer-reach { display: grid; gap: 6px; font-size: 1rem; margin-top: 14px; }
 .footer-top > .footer-cols { grid-column: auto; display: grid; gap: 6px; font-size: 0.95rem; grid-template-columns: 1fr; }
 .footer-legal { margin-top: 40px; padding-top: 16px; border-top: 1px solid rgba(238, 241, 244, 0.14); display: flex; justify-content: space-between; color: var(--field-1-muted); }
 .footer-legal a { color: var(--field-1-ink); }
