@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { useReveal } from '../scroll/useReveal'
 import { useWords } from '../scroll/useWords'
 import { GROUP, type Division } from '../content'
-import { href } from '../router'
 import { Contact } from '../ui/Contact'
 
 /** One division: hero, statement and figures, six services, what is included, two pictures, how a job runs, questions, the form. */
@@ -16,7 +15,7 @@ export function DivisionPage({ d }: { d: Division }) {
       <section id="top" className="hero hero-division" aria-label={d.name.join(' ')}>
         <div className="hero-photos" aria-hidden="true"><img src={d.hero} alt="" width={1920} height={1080} className="hero-photo is-active" fetchPriority="high" /></div>
         <div className="hero-scrim" aria-hidden="true" />
-        <p className="hero-crumb small" data-rise style={i(0)}><a href={href('')}>{GROUP.name}</a> · {d.brand}</p>
+        <p className="hero-crumb small" data-rise style={i(0)}>{d.brand}</p>
         <div className="hero-foot">
           <div className="hero-left">
             <h1 className="hero-title lines">
@@ -26,7 +25,7 @@ export function DivisionPage({ d }: { d: Division }) {
           </div>
           <div className="hero-right" data-rise style={i(2)}>
             <p className="hero-support">{d.tagline}</p>
-            <a href="#contact" className="button button-light">{GROUP.cta}</a>
+            <a href={d.contact.phoneHref} className="button button-light">Call {d.contact.phone}</a>
           </div>
         </div>
       </section>
@@ -75,7 +74,7 @@ export function DivisionPage({ d }: { d: Division }) {
         <div className="section-head">
           <h2 className="h-section" data-reveal>Questions we are asked</h2>
           <p className="division-links small" data-reveal>
-            <a href={d.contact.phoneHref} className="link">{d.contact.phone}</a> · <a href={`mailto:${d.contact.email}`} className="link">{d.contact.email}</a> · <a href={d.external} className="link" target="_blank" rel="noreferrer">Current {d.brand} site</a>
+            <a href={d.contact.phoneHref} className="link">{d.contact.phone}</a> · <a href={`mailto:${d.contact.email}`} className="link">{d.contact.email}</a>
           </p>
         </div>
         <ul className="qa">

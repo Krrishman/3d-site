@@ -10,11 +10,11 @@ export function Footer() {
         <div>
           <p className="footer-name">The Automatic Group</p>
           <p className="footer-tag small">Six crafts. One family. Since {GROUP.since}.</p>
+          <p className="footer-addr">{GROUP.address}</p>
         </div>
         <ul className="footer-reach">
           <li><a href={GROUP.phoneHref} className="link">{GROUP.phone}</a></li>
           <li><a href={`mailto:${GROUP.email}`} className="link">{GROUP.email}</a></li>
-          <li>{GROUP.address}</li>
         </ul>
         <ul className="footer-cols" aria-label="Divisions">{DIVISIONS.map((d) => <li key={d.id}><a href={href(d.id)} className="link">{d.name.join(' ')}</a></li>)}</ul>
         <ul className="footer-cols" aria-label="Elsewhere">{GROUP.social.map((s) => <li key={s.label}><a href={s.href} className="link" target="_blank" rel="noreferrer">{s.label}</a></li>)}<li><a href={href('')} className="link">The group</a></li></ul>

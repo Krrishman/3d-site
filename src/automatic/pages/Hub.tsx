@@ -25,7 +25,7 @@ export function Hub() {
           </div>
           <div className="hero-right" data-rise style={i(2)}>
             <p className="hero-support">{GROUP.support}</p>
-            <a href="#contact" className="button button-light">{GROUP.cta}</a>
+            <a href={GROUP.phoneHref} className="button button-light">Call {GROUP.phone}</a>
           </div>
         </div>
       </section>
