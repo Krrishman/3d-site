@@ -16,6 +16,10 @@ See `CLAUDE.md` for the architecture and conventions.
 - `/v2/` (`src/v2/`): dark, with a scroll-scrubbed film background and dust particles.
 - `/plumbing/` (`src/plumbing/`): the light editorial site, kept for a separate
   plumbing client. Do not change it unless that client asks.
+- `/automatic/` (`src/automatic/`): The Automatic Group, a Long Island group
+  with six divisions. One hash-routed app: a group page and six division
+  pages on the light editorial theme. Photographs from
+  `scripts/generate-automatic-photos.mjs`.
 - `/v5/` (`src/v5/`): cinematic dark version with a looping molten-metal hero
   clip and studio photographs. Kept for reference.
 - `/v6/` (`src/v6/`): the current FlowForge site. The lava film fills the hero;

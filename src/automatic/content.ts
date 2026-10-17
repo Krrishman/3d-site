@@ -36,6 +36,7 @@ export type Division = {
   name: [string, string]
   tagline: string
   intro: string
+  intro2: string
   hero: string
   heroAlt: string
   stats: { value: string; label: string }[]
@@ -54,6 +55,7 @@ export const DIVISIONS: Division[] = [
     id: 'sprinklers', nav: 'Sprinklers', brand: 'Automatic Irrigation Design',
     name: ['Lawn', 'sprinklers'], tagline: 'The first thing the family ever built, and still the biggest.',
     intro: 'Design, installation and year-round service of irrigation systems for homes, estates and commercial properties, with full-time technicians rather than subcontractors and a 24-hour emergency line.',
+    intro2: 'Every job is done by our own crews, planned by our own designers, and backed by the same phone number afterwards.',
     hero: photo('sprinklers-hero'), heroAlt: 'Sprinklers throwing arcs of water across an estate lawn at dawn',
     stats: [{ value: '41,637', label: 'systems installed' }, { value: '10,218', label: 'services a year' }, { value: '534', label: 'five-star reviews' }, { value: '24 hr', label: 'emergency line' }],
     services: [
@@ -77,6 +79,7 @@ export const DIVISIONS: Division[] = [
     id: 'courts', nav: 'Courts', brand: 'Tennis Planning Corp.',
     name: ['Tennis &', 'pickleball courts'], tagline: 'Enjoy the love game in your own backyard.',
     intro: 'Design, construction and resurfacing of private and club courts across Long Island, from red clay and Har-Tru to cushioned hard courts and dedicated pickleball, with fencing, lighting and windscreens.',
+    intro2: 'Every job is done by our own crews, planned by our own designers, and backed by the same phone number afterwards.',
     hero: photo('courts-hero'), heroAlt: 'A private red clay tennis court among oaks on an estate',
     stats: [{ value: '1,018', label: 'courts built and serviced' }, { value: '64', label: 'years on Long Island' }, { value: 'Great Neck', label: 'to Montauk' }],
     services: [
@@ -100,6 +103,7 @@ export const DIVISIONS: Division[] = [
     id: 'pools', nav: 'Pools', brand: 'Tennis Planning Corp.',
     name: ['Gunite', 'swimming pools'], tagline: 'Any shape, any depth, built to outlast the house.',
     intro: 'Custom gunite pools and spas designed with landscape architects and engineers, built by in-house crews, and restored when older pools need a new life.',
+    intro2: 'Every job is done by our own crews, planned by our own designers, and backed by the same phone number afterwards.',
     hero: photo('pools-hero'), heroAlt: 'A gunite pool with a spillover spa at dusk',
     stats: [{ value: '536', label: 'pools built and restored' }, { value: '50+', label: 'years building pools' }, { value: '100%', label: 'custom, no kits' }],
     services: [
@@ -122,6 +126,7 @@ export const DIVISIONS: Division[] = [
     id: 'landscape', nav: 'Landscape', brand: 'Tennis Planning Corp.',
     name: ['Fine landscaping', '& custom masonry'], tagline: 'You paint a portrait. We turn it landscape.',
     intro: 'Landscape design and planning by experienced landscape architects, built with stone, planting, drainage and lighting that are meant to last, and to last beautifully.',
+    intro2: 'Every job is done by our own crews, planned by our own designers, and backed by the same phone number afterwards.',
     hero: photo('landscape-hero'), heroAlt: 'A bluestone path through a layered estate garden',
     stats: [{ value: '64', label: 'years of gardens' }, { value: 'Award', label: 'winning design' }, { value: 'In-house', label: 'crews and masons' }],
     services: [
@@ -145,6 +150,7 @@ export const DIVISIONS: Division[] = [
     id: 'construction', nav: 'Construction', brand: 'Stewart Senter Inc.',
     name: ['Construction', 'management'], tagline: 'Exceptional service. Extraordinary homes.',
     intro: 'New homes, major renovations and estate projects managed from first drawing to final walkthrough, by the family that has been building on Long Island since 1958.',
+    intro2: 'One manager from first drawing to final walkthrough, trusted trades, and the same phone number afterwards.',
     hero: photo('construction-hero'), heroAlt: 'A newly completed shingle-style house at golden hour',
     stats: [{ value: '1958', label: 'building since' }, { value: 'One', label: 'point of contact' }, { value: 'Open', label: 'books and schedule' }],
     services: [
@@ -167,6 +173,7 @@ export const DIVISIONS: Division[] = [
     id: 'realestate', nav: 'Real estate', brand: 'Automatic Real Estate Associates',
     name: ['Real estate', 'brokerage'], tagline: 'Make it Automatic.',
     intro: 'Residential sales and exclusive listings on the North Shore and across Long Island, from a brokerage that knows what a property is worth because the family has built so many of them.',
+    intro2: 'A brokerage inside a building group: we know what a house costs to build, to fix and to run, and we price it accordingly.',
     hero: photo('realestate-hero'), heroAlt: 'A brick Georgian colonial on a tree-lined lane',
     stats: [{ value: 'North Shore', label: 'and beyond' }, { value: 'BBB', label: 'accredited' }, { value: 'Exclusive', label: 'listings' }],
     services: [

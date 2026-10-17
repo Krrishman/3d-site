@@ -34,14 +34,14 @@ export function DivisionPage({ d }: { d: Division }) {
       <section ref={stats} className="stats">
         <p className="stats-intro lead" data-reveal>{d.intro}</p>
         <dl className="stats-row">
-          {d.stats.map((s) => <div key={s.label} data-reveal><dd className="stat-value">{s.value}</dd><dt className="small muted">{s.label}</dt></div>)}
+          {d.stats.map((s) => <div key={s.label} data-reveal><dt className="stat-value">{s.value}</dt><dd className="small muted">{s.label}</dd></div>)}
         </dl>
       </section>
 
       <section ref={services} className="services">
         <div className="services-open">
           <h2 className="services-statement" data-reveal>What we do</h2>
-          <p className="services-intro lead" data-reveal>Every job is done by our own crews, planned by our own designers, and backed by the same phone number afterwards.</p>
+          <p className="services-intro lead" data-reveal>{d.intro2}</p>
         </div>
         <ul className="svc-grid">
           {d.services.map((s) => <li key={s.title} className="svc" data-reveal><h3 className="svc-title">{s.title}</h3><p className="svc-body">{s.body}</p></li>)}

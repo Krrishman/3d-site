@@ -8,6 +8,9 @@ A smooth-scroll 3D marketing site. Vite, React 19, TypeScript, Tailwind v4.
 - `v2/` + `src/v2/` is the dark film-background version. Not being changed.
 - `plumbing/` + `src/plumbing/` is the light editorial site kept for a separate
   plumbing client. Do not change it unless asked for that client.
+- `automatic/` + `src/automatic/` is The Automatic Group site for a client:
+  hash-routed (`#pools` etc.), a hub page plus one data-driven division page,
+  all content in `src/automatic/content.ts`. Built on the plumbing theme.
 - `v5/` + `src/v5/` is the cinematic video-hero version, kept for reference.
 - `v6/` + `src/v6/` is the current FlowForge site. The background is one raw
   WebGL fragment shader (`src/v6/scene/River.tsx`) on a fixed canvas. On the
