@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-ink: #0b0b0d;
+  --color-paper: #f3f1ec;
+  --color-accent: #ff5a1f;
+}
+
+html {
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* Lenis owns the scroll. These rules come from the Lenis docs. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+/* Text split by GSAP SplitText starts hidden until its reveal plays. */
+.split-line {
+  display: block;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
