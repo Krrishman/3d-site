@@ -13,6 +13,7 @@ export function Contact({ preset }: { preset?: string }) {
   const mail = `mailto:${d.contact.email}?cc=${GROUP.email}&subject=${encodeURIComponent(`${d.nav}: ${name || 'enquiry'}`)}&body=${encodeURIComponent(`Hi,\n\nName: ${name}\nDivision: ${d.nav}\n\n${msg}\n\nThanks,\n${name}`)}`
   return (
     <section ref={root} id="contact" className="contact">
+      <div className="contact-inner">
       <div className="contact-words">
         <h2 className="contact-heading" data-reveal>{CONTACT.heading.join(' ')}</h2>
         <p className="contact-sentence" data-reveal>{CONTACT.sentence}</p>
@@ -24,6 +25,7 @@ export function Contact({ preset }: { preset?: string }) {
         <label className="field field-wide"><span className="small">{CONTACT.fields.message}</span><textarea id="c-msg" name="message" rows={3} value={msg} onChange={(e) => setMsg(e.target.value)} required /></label>
         <button type="submit" className="button">{CONTACT.fields.send}</button>
       </form>
+      </div>
     </section>
   )
 }
