@@ -16,9 +16,12 @@ See `CLAUDE.md` for the architecture and conventions.
 - `/v2/` (`src/v2/`): dark, with a scroll-scrubbed film background and dust particles.
 - `/plumbing/` (`src/plumbing/`): the light editorial site, kept for a separate
   plumbing client. Do not change it unless that client asks.
-- `/v5/` (`src/v5/`): the current FlowForge site. Cinematic dark theme: a
-  looping molten-metal hero clip, blue-hour job-site photographs, a pinned
-  sideways run of work, a live lead-dashboard demo, questions and a contact form.
+- `/v5/` (`src/v5/`): cinematic dark version with a looping molten-metal hero
+  clip and studio photographs. Kept for reference.
+- `/v6/` (`src/v6/`): the current FlowForge site. One shader-drawn river of
+  molten light runs behind the whole page and follows the scroll; sections are
+  translucent text sheets with full service detail; three palettes (paper,
+  forge, ice) switch from the bar or with `?theme=`.
 
 ## Generating the photographs (plumbing)
 

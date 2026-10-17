@@ -8,11 +8,12 @@ A smooth-scroll 3D marketing site. Vite, React 19, TypeScript, Tailwind v4.
 - `v2/` + `src/v2/` is the dark film-background version. Not being changed.
 - `plumbing/` + `src/plumbing/` is the light editorial site kept for a separate
   plumbing client. Do not change it unless asked for that client.
-- `v5/` + `src/v5/` is the current FlowForge site. Plain CSS (no Tailwind), no
-  WebGL, Lenis + GSAP for scroll, a looping video hero. Media comes from
-  `scripts/generate-v5-media.mjs` into `public/v5/media`; fonts are
-  self-hosted in `public/v5/fonts`. Keep the house rules it was built with:
-  headlines two lines max, one accent colour, no icon-card rows.
+- `v5/` + `src/v5/` is the cinematic video-hero version, kept for reference.
+- `v6/` + `src/v6/` is the current FlowForge site. The background is one raw
+  WebGL fragment shader (`src/v6/scene/River.tsx`) on a fixed canvas: it reads
+  the page scroll from the Zustand store and the `--river-*` CSS tokens of the
+  active `data-theme`, so recolouring is a CSS change. No images; sections are
+  `.sheet` panels. Plain CSS, Lenis + GSAP. Fonts self-hosted in `public/v6/fonts`.
 - All share `src/renders.generated.ts` and `public/renders`. `npm run build`
   builds every entry; preview each at its path.
 

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="FlowForge Digital builds websites, dashboards and small custom tools for businesses of every kind. One builder, start to finish." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>FlowForge Digital</title>
+    <script>
+      document.documentElement.classList.add('js')
+      var t = new URLSearchParams(location.search).get('theme') || localStorage.getItem('ff-theme') || 'paper'
+      document.documentElement.setAttribute('data-theme', t)
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/v6/main.tsx"></script>
+  </body>
+</html>
