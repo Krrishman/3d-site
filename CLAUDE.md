@@ -44,3 +44,9 @@ A smooth-scroll 3D marketing site. Vite, React 19, TypeScript, Tailwind v4.
 Headless Chromium here renders WebGL through SwiftShader (software). Use it to
 screenshot scroll positions and check layout, not to judge frame rate.
 Judge performance on a real GPU via a deployed preview.
+
+## Images
+
+Work tiles and project images are placeholders until `scripts/generate-assets.mjs`
+(Kie.ai, needs `KIE_API_KEY`) writes renders into `public/renders/` and
+`src/renders.generated.ts`. Never commit an API key; read it from the environment.

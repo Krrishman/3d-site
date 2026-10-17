@@ -1,3 +1,5 @@
+import { RENDERS } from './renders.generated'
+
 /** All copy for the page, taken from the FlowForge Digital brief. */
 export const EMAIL = 'hello@flowforgedigital.com'
 export const SITE = 'flowforgedigital.com'
@@ -69,12 +71,15 @@ export const CTA = {
   button: 'Book My Free Call',
 }
 
+/** A generated render when scripts/generate-assets.mjs has produced it, else the placeholder. */
+const render = (id: string, fallback: string) => RENDERS[id] ?? fallback
+
 /**
  * PLACEHOLDERS. These preview tiles and project images come from the
- * reference template and must be replaced with FlowForge's own renders
- * (Kie.ai) before launch.
+ * reference template and are replaced by FlowForge's own renders
+ * (scripts/generate-assets.mjs) as they are generated.
  */
-export const WORK_TILES = [
+const PLACEHOLDER_TILES = [
   'https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif',
   'https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif',
   'https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif',
@@ -97,6 +102,7 @@ export const WORK_TILES = [
   'https://motionsites.ai/assets/hero-luminex-preview-CxOP7ce6.gif',
   'https://motionsites.ai/assets/hero-celestia-preview-0yO3jXO8.gif',
 ]
+export const WORK_TILES = PLACEHOLDER_TILES.map((fallback, i) => render(`work-${String((i % 12) + 1).padStart(2, '0')}`, fallback))
 
 const HIGGS = (id: string) =>
   `https://images.higgs.ai/?default=1&output=webp&url=${encodeURIComponent(`https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/${id}.png`)}&w=1280&q=85`
@@ -106,15 +112,15 @@ export const PROJECTS = {
   items: [
     {
       n: '01', category: 'Client project', name: 'Contractor Lead Dashboard', href: '#demo', cta: 'Live demo',
-      images: [HIGGS('hf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db'), HIGGS('hf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8'), HIGGS('hf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327')],
+      images: [render('p1-a', HIGGS('hf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db')), render('p1-b', HIGGS('hf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8')), render('p1-c', HIGGS('hf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327'))],
     },
     {
       n: '02', category: 'Product', name: 'Inventory & Reorder Tracker', href: BOOK_HREF, cta: 'Ask about it',
-      images: [HIGGS('hf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f'), HIGGS('hf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1'), HIGGS('hf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea')],
+      images: [render('p2-a', HIGGS('hf_20260412_055654_911201c5-36d9-4bc6-bac7-331adfce159f')), render('p2-b', HIGGS('hf_20260412_055723_5ceda0b8-d9c2-4665-b2e3-83ba19ba76d1')), render('p2-c', HIGGS('hf_20260412_055753_adc5dcbd-a8e6-49c0-b43a-9b030d835cea'))],
     },
     {
       n: '03', category: 'Client project', name: 'Client Portal & Scheduling', href: BOOK_HREF, cta: 'Ask about it',
-      images: [HIGGS('hf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f'), HIGGS('hf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b'), HIGGS('hf_20260412_055818_9d062121-ad7e-46b9-999a-1a6a692ef1ee')],
+      images: [render('p3-a', HIGGS('hf_20260412_055759_963cfb0b-4bd1-4b0f-9d0a-09bd6cf95b2f')), render('p3-b', HIGGS('hf_20260412_060108_438f781a-9846-4dcc-89ab-c4e6cb830f5b')), render('p3-c', HIGGS('hf_20260412_055818_9d062121-ad7e-46b9-999a-1a6a692ef1ee'))],
     },
   ],
 }
