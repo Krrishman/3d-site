@@ -10,10 +10,14 @@ A smooth-scroll 3D marketing site. Vite, React 19, TypeScript, Tailwind v4.
   plumbing client. Do not change it unless asked for that client.
 - `v5/` + `src/v5/` is the cinematic video-hero version, kept for reference.
 - `v6/` + `src/v6/` is the current FlowForge site. The background is one raw
-  WebGL fragment shader (`src/v6/scene/River.tsx`) on a fixed canvas: it reads
-  the page scroll from the Zustand store and the `--river-*` CSS tokens of the
-  active `data-theme`, so recolouring is a CSS change. No images; sections are
-  `.sheet` panels. Plain CSS, Lenis + GSAP. Fonts self-hosted in `public/v6/fonts`.
+  WebGL fragment shader (`src/v6/scene/River.tsx`) on a fixed canvas. On the
+  dark palette (the default) the lava film in `public/v6/media` is uploaded as a
+  texture each frame: it fills the hero anchored to the page top, hands over to
+  the drawn river at the bottom of the first screen, and textures that river
+  the rest of the way down. Light palettes use the drawn river alone. The
+  shader reads page scroll from the Zustand store and the `--river-*` tokens of
+  the active `data-theme`. No photographs; sections are `.sheet` panels. Plain
+  CSS, Lenis + GSAP. Fonts self-hosted in `public/v6/fonts`.
 - All share `src/renders.generated.ts` and `public/renders`. `npm run build`
   builds every entry; preview each at its path.
 

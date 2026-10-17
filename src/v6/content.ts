@@ -13,8 +13,8 @@ export const LINKS = [
 ]
 
 export const THEMES = [
-  { id: 'paper', label: 'Paper' },
   { id: 'forge', label: 'Forge' },
+  { id: 'paper', label: 'Paper' },
   { id: 'ice', label: 'Ice' },
 ]
 

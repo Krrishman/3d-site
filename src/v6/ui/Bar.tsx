@@ -3,7 +3,7 @@ import { ScrollTrigger } from '../scroll/gsap'
 import { BOOK, BOOK_HREF, LINKS, NAME, THEMES } from '../content'
 import { FlowMark } from './FlowMark'
 
-function currentTheme() { return document.documentElement.getAttribute('data-theme') || 'paper' }
+function currentTheme() { return document.documentElement.getAttribute('data-theme') || 'forge' }
 
 /** Wordmark left, the sections in a pill, one action right, and a small palette switch. */
 export function Bar() {

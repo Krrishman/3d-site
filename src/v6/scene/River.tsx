@@ -13,6 +13,7 @@ const FRAG = `
 precision highp float;
 uniform vec2 uRes; uniform float uTime; uniform float uScroll; uniform float uLight;
 uniform vec3 uBg; uniform vec3 uBg2; uniform vec3 uHot; uniform vec3 uWarm; uniform vec3 uCool;
+uniform sampler2D uVideo; uniform float uHasVideo; uniform float uVideoAspect;
 float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
   return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }
@@ -24,9 +25,11 @@ void main(){
   // Page space: y grows downward as you scroll. One unit = one viewport height.
   float py = (1.0 - uv.y) + uScroll;
   float px = uv.x * aspect;
-  // The river's centre line meanders slowly down the page.
-  float cx = aspect * (0.56 + 0.26 * sin(py * 0.9 + 0.4) + 0.07 * sin(py * 2.7 + 1.3));
-  float w = (0.085 + 0.03 * sin(py * 1.7 + 0.8)) * max(aspect, 0.9);
+  // The river's centre line meanders slowly down the page. It starts where the
+  // film's lava leaves the bottom of the hero (about a fifth of the way in from the left).
+  float t = py - 1.0;
+  float cx = aspect * (0.20 + 0.30 * (1.0 - cos(t * 0.75)) + 0.06 * sin(t * 2.6));
+  float w = (0.085 + 0.03 * sin(t * 1.7 + 0.8)) * max(aspect, 0.9);
   float d = abs(px - cx);
   // Molten texture flowing down the stream.
   vec2 q = vec2(px * 2.2, py * 1.9 - uTime * 0.22);
@@ -46,6 +49,15 @@ void main(){
   vec3 river = mix(uWarm * 0.72, uWarm, dark);
   river = mix(river, uHot, cracks * 0.85);
   river = mix(river, uHot * 1.25, veins * core);
+  // Inside the stream, use the film's own lava as the texture: a strip taken
+  // across the river in the lower part of the frame, carried along with the flow.
+  if (uHasVideo > 0.5) {
+    float across = clamp(0.5 + (px - cx) / (2.0 * w), 0.0, 1.0);
+    float along = fract(t * 0.55 - uTime * 0.02);
+    vec3 lava = texture2D(uVideo, vec2(0.20 + 0.42 * along, 0.62 + 0.36 * across)).rgb;
+    float lum = dot(lava, vec3(0.3, 0.59, 0.11));
+    river = mix(river, lava * 1.35, 0.75 * smoothstep(0.08, 0.5, lum));
+  }
   // A bright thread down the very centre.
   river += uHot * 0.35 * exp(-(d * d) / (w * w * 0.08));
   col = mix(col, river, core);
@@ -59,6 +71,17 @@ void main(){
   float ember = smoothstep(0.08, 0.0, length(gf - c)) * step(0.93, h) * halo * 2.0;
   ember *= 0.5 + 0.5 * sin(uTime * 3.0 + h * 40.0);
   col += uHot * ember * mix(1.0, 0.5, uLight);
+  // The hero is the film itself, anchored to the top of the page. It hands
+  // over to the drawn river across the last fifth of the first screen.
+  if (uHasVideo > 0.5 && py < 1.05) {
+    // Cover-fit the 16:9 film to the viewport.
+    vec2 vuv = vec2(uv.x, py);
+    float sa = aspect / uVideoAspect;
+    if (sa > 1.0) { vuv.y = (vuv.y - 0.5) / sa + 0.5; } else { vuv.x = (vuv.x - 0.5) * sa + 0.5; }
+    vec3 film = texture2D(uVideo, clamp(vuv, 0.0, 1.0)).rgb;
+    float hand = smoothstep(0.80, 1.02, py);
+    col = mix(film, col, hand);
+  }
   // Film grain.
   col += (hash(uv * uRes + uTime) - 0.5) * 0.035;
   gl_FragColor = vec4(col, 1.0);
@@ -88,11 +111,31 @@ export function River() {
     const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
     const u = (n: string) => gl.getUniformLocation(prog, n)
     const uRes = u('uRes'), uTime = u('uTime'), uScroll = u('uScroll'), uLight = u('uLight')
+    const uVideo = u('uVideo'), uHasVideo = u('uHasVideo'), uVideoAspect = u('uVideoAspect')
+    // The film. Only used on the dark palette; the light ones keep the drawn river.
+    const video = document.createElement('video')
+    video.muted = true; video.loop = true; video.playsInline = true; video.preload = 'auto'; video.crossOrigin = 'anonymous'
+    video.src = `${import.meta.env.BASE_URL}v6/media/hero-web.mp4`
+    const tex = gl.createTexture()
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([7, 10, 16]))
+    gl.uniform1i(uVideo, 0); gl.uniform1f(uHasVideo, 0); gl.uniform1f(uVideoAspect, 16 / 9)
+    let videoReady = false, dark = false
+    const poster = new Image(); poster.src = `${import.meta.env.BASE_URL}v6/media/hero-poster.jpg`
+    poster.onload = () => { if (!videoReady) { gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, poster); gl.uniform1f(uVideoAspect, poster.width / poster.height); videoReady = true; gl.uniform1f(uHasVideo, dark ? 1 : 0) } }
+    video.addEventListener('loadeddata', () => { gl.uniform1f(uVideoAspect, video.videoWidth / video.videoHeight) })
+    if (!reduced) video.play().catch(() => { /* poster stays */ })
+    const onVis = () => { if (reduced) return; if (document.hidden) video.pause(); else video.play().catch(() => {}) }
+    document.addEventListener('visibilitychange', onVis)
     const colors = { uBg: u('uBg'), uBg2: u('uBg2'), uHot: u('uHot'), uWarm: u('uWarm'), uCool: u('uCool') }
     const applyTheme = () => {
       gl.uniform3fv(colors.uBg, cssColor('--river-bg')); gl.uniform3fv(colors.uBg2, cssColor('--river-bg2'))
       gl.uniform3fv(colors.uHot, cssColor('--river-hot')); gl.uniform3fv(colors.uWarm, cssColor('--river-warm')); gl.uniform3fv(colors.uCool, cssColor('--river-cool'))
-      gl.uniform1f(uLight, getComputedStyle(document.documentElement).getPropertyValue('--river-light').trim() === '1' ? 1 : 0)
+      dark = getComputedStyle(document.documentElement).getPropertyValue('--river-light').trim() !== '1'
+      gl.uniform1f(uLight, dark ? 0 : 1)
+      gl.uniform1f(uHasVideo, dark && videoReady ? 1 : 0)
     }
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 1.25)
@@ -109,11 +152,15 @@ export function River() {
       smooth += (target - smooth) * 0.12
       gl.uniform1f(uTime, reduced ? 0 : (now - t0) / 1000)
       gl.uniform1f(uScroll, smooth)
+      if (dark && !reduced && video.readyState >= 2 && !video.paused) {
+        gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video)
+        if (!videoReady) { videoReady = true; gl.uniform1f(uHasVideo, 1) }
+      }
       gl.drawArrays(gl.TRIANGLES, 0, 3)
       raf = requestAnimationFrame(frame)
     }
     raf = requestAnimationFrame(frame)
-    return () => { cancelAnimationFrame(raf); removeEventListener('resize', resize); mo.disconnect() }
+    return () => { cancelAnimationFrame(raf); removeEventListener('resize', resize); mo.disconnect(); document.removeEventListener('visibilitychange', onVis); video.pause(); video.removeAttribute('src'); video.load() }
   }, [reduced])
   return <canvas ref={ref} className="river" aria-hidden="true" />
 }

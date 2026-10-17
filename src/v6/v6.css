@@ -6,14 +6,14 @@
 @font-face { font-family: 'Zodiak'; src: url('/v6/fonts/zodiak-300-italic.woff2') format('woff2'); font-weight: 300; font-style: italic; font-display: swap; }
 
 /* ---------- themes. The river reads the --river-* tokens. ---------- */
-:root, :root[data-theme='paper'] {
+:root[data-theme='paper'] {
   --bg: #efe9df; --ink: #15120e; --muted: #6a6258; --line: rgba(21, 18, 14, 0.12);
   --sheet: rgba(246, 242, 235, 0.82); --sheet-strong: rgba(246, 242, 235, 0.94);
   --accent: #c8651f; --accent-ink: #fff6ee; --button: #15120e; --button-ink: #efe9df;
   --river-bg: #efe9df; --river-bg2: #e2d8c8; --river-hot: #ffb15c; --river-warm: #d9702a; --river-cool: #9fc7c4; --river-light: 1;
   color-scheme: light;
 }
-:root[data-theme='forge'] {
+:root, :root[data-theme='forge'] {
   --bg: #070a10; --ink: #ece7dd; --muted: #98a1b3; --line: rgba(236, 231, 221, 0.12);
   --sheet: rgba(10, 14, 22, 0.66); --sheet-strong: rgba(10, 14, 22, 0.86);
   --accent: #e08a3c; --accent-ink: #130b04; --button: #ece7dd; --button-ink: #070a10;
