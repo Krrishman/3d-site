@@ -11,10 +11,14 @@ A smooth-scroll 3D marketing site. Vite, React 19, TypeScript, Tailwind v4.
 - `v5/` + `src/v5/` is the cinematic video-hero version, kept for reference.
 - `v6/` + `src/v6/` is the current FlowForge site. The background is one raw
   WebGL fragment shader (`src/v6/scene/River.tsx`) on a fixed canvas. On the
-  dark palette (the default) the lava film in `public/v6/media` is uploaded as a
-  texture each frame: it fills the hero anchored to the page top, hands over to
-  the drawn river at the bottom of the first screen, and textures that river
-  the rest of the way down. Light palettes use the drawn river alone. The
+  dark palette (the default) the looping lava film in `public/v6/media` fills
+  the hero, and as soon as the page scrolls it hands over to the follow shot:
+  a Kling image-to-video continuation of the film's last frame (camera tilting
+  down and gliding along the river), cut into 2x2 WebP sheets in
+  `public/v6/frames` and scrubbed by scroll position across the whole page.
+  Regenerate with `scripts/generate-follow.mjs` then
+  `scripts/generate-background.mjs --video public/v6/media/follow.mp4 --fps 36
+  --frames-dir public/v6/frames`. Light palettes use the drawn river alone. The
   shader reads page scroll from the Zustand store and the `--river-*` tokens of
   the active `data-theme`. No photographs; sections are `.sheet` panels. Plain
   CSS, Lenis + GSAP. Fonts self-hosted in `public/v6/fonts`.

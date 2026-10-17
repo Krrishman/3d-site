@@ -18,9 +18,9 @@ See `CLAUDE.md` for the architecture and conventions.
   plumbing client. Do not change it unless that client asks.
 - `/v5/` (`src/v5/`): cinematic dark version with a looping molten-metal hero
   clip and studio photographs. Kept for reference.
-- `/v6/` (`src/v6/`): the current FlowForge site. The lava film fills the hero
-  and its river flows on behind the whole page as you scroll, drawn by a
-  shader that uses the film as its texture. Sections are translucent text
+- `/v6/` (`src/v6/`): the current FlowForge site. The lava film fills the hero;
+  scrolling scrubs a second clip generated from its last frame, so the camera
+  tilts down and follows the river behind the whole page. Sections are translucent text
   sheets with full service detail. Dark by default; paper and ice palettes
   switch from the bar or with `?theme=`.
 

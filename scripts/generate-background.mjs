@@ -7,6 +7,7 @@
  *   KIE_API_KEY=... node scripts/generate-background.mjs --video a.mp4   # only cut frames from a file
  *   --model kling-2.6/text-to-video | bytedance/seedance-1.5-pro | wan/2-6-text-to-video
  *   --out <dir>   where the mp4 is kept (default scratch/background)
+ *   --frames-dir  where the sheets go (default public/v2/frames)
  *   --fps N       frames per second of footage (default 60; the clip is
  *                 motion-interpolated up to it so the scrub stays smooth)
  *
@@ -26,7 +27,7 @@ const FPS = Number(arg('--fps', '60'))
 const PER_SHEET = 4 // 2x2
 const VIDEO = arg('--video', null)
 const NAME = arg('--name', 'bg')
-const FRAMES_DIR = path.resolve('public/v2/frames')
+const FRAMES_DIR = path.resolve(arg('--frames-dir', 'public/v2/frames'))
 
 export const PROMPT = arg('--prompt',
   'Abstract macro cinematography in deep navy darkness. Thin luminous ribbons of electric blue and teal light drift slowly like silk underwater, soft volumetric glow, fine floating dust particles catching the light. Over time the scattered ribbons gather and align into one smooth, wide, flowing stream that sweeps gently from the lower left to the upper right of the frame, calm and orderly. Extremely slow continuous motion, one uninterrupted shot, locked camera with a very subtle slow push-in, shallow depth of field, soft bokeh, photoreal, cinematic lighting, dark background with plenty of empty space. No text, no logos, no people, no cuts, no flicker.')
@@ -75,6 +76,7 @@ async function cut(video) {
   const sheets = frames / PER_SHEET
   // Interpolate once at the larger size, then derive the smaller set from it.
   await rm(FRAMES_DIR, { recursive: true, force: true })
+  await mkdir(OUT, { recursive: true })
   const tmp = path.join(OUT, 'interp.mp4')
   console.log(`interpolating to ${FPS} fps (${frames} frames, ${sheets} sheets)...`)
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', video, '-vf', `scale=1440:-2:flags=lanczos,minterpolate=fps=${FPS}:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1`, '-frames:v', String(frames), '-c:v', 'libx264', '-qp', '0', '-preset', 'veryfast', tmp], { stdio: 'inherit' })
