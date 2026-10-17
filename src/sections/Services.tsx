@@ -1,60 +1,38 @@
 import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
-import { gsap, ScrollTrigger } from '../scroll/gsap'
+import { gsap } from '../scroll/gsap'
 import { useStage } from '../scroll/useStage'
 import { useReducedMotion } from '../scroll/useReducedMotion'
 import { SERVICES } from '../content'
 
-/** Sticky title on the left; each service lights up as it passes the centre. */
 export function Services() {
   const root = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
-  useStage(root, 2)
-
+  useStage(root, 3)
   useGSAP(
     () => {
-      if (!root.current) return
-      const rows = gsap.utils.toArray<HTMLElement>('[data-service]', root.current)
-      rows.forEach((row) => {
-        ScrollTrigger.create({
-          trigger: row,
-          start: 'top 60%',
-          end: 'bottom 40%',
-          onToggle: (self) => row.classList.toggle('is-active', self.isActive),
-        })
+      if (reduced || !root.current) return
+      gsap.from('[data-title]', { opacity: 0, y: 40, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: root.current, start: 'top 75%', once: true } })
+      gsap.utils.toArray<HTMLElement>('[data-item]', root.current).forEach((el, i) => {
+        gsap.from(el, { opacity: 0, y: 30, duration: 0.7, delay: i * 0.1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } })
       })
-      // Opacity is owned by the is-active class; the entrance only moves.
-      if (!reduced) {
-        gsap.from(rows, { y: 40, stagger: 0.1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: root.current, start: 'top 70%', once: true } })
-      }
     },
     { scope: root, dependencies: [reduced] },
   )
-
   return (
-    <section ref={root} id="services" className="relative px-5 py-28 md:px-10 md:py-40">
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
-        <div className="md:col-span-4">
-          <div className="md:sticky md:top-32">
-            <p className="eyebrow mb-4">Services</p>
-            <h2 className="text-[clamp(2.25rem,4.5vw,4rem)] leading-[1]">{SERVICES.title}</h2>
-            <div className="rule mt-8 w-40" />
-          </div>
-        </div>
-        <ol className="md:col-span-7 md:col-start-6">
-          {SERVICES.items.map((s) => (
-            <li key={s.n} data-service className="group border-t border-white/10 py-10 transition-opacity duration-500 md:py-14 [&:not(.is-active)]:opacity-45 md:[&:not(.is-active)]:opacity-35">
-              <div className="flex items-start gap-6">
-                <span className="mt-2 text-sm font-bold text-teal">{s.n.padStart(2, '0')}</span>
-                <div>
-                  <h3 className="text-[clamp(1.6rem,3vw,2.75rem)] leading-[1.05] transition-colors group-[.is-active]:text-teal">{s.name}</h3>
-                  <p className="mt-4 max-w-[46ch] text-lg text-mist">{s.body}</p>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
+    <section ref={root} id="services" className="relative z-10 rounded-t-[40px] bg-paper px-5 py-20 text-navy sm:rounded-t-[50px] sm:px-8 sm:py-24 md:rounded-t-[60px] md:px-10 md:py-32">
+      <h2 data-title className="display mb-16 text-center text-[clamp(3rem,12vw,160px)] sm:mb-20 md:mb-28">{SERVICES.title}</h2>
+      <ol className="mx-auto max-w-5xl">
+        {SERVICES.items.map((s) => (
+          <li key={s.n} data-item className="flex items-start gap-6 border-t border-navy/15 py-8 sm:gap-10 sm:py-10 md:py-12">
+            <span className="display w-[1.3em] shrink-0 text-[clamp(3rem,10vw,140px)] leading-none">{s.n.padStart(2, '0')}</span>
+            <div className="pt-2 md:pt-4">
+              <h3 className="font-medium uppercase tracking-wide text-[clamp(1rem,2.2vw,2.1rem)]">{s.name}</h3>
+              <p className="mt-3 max-w-2xl font-light leading-relaxed text-[clamp(0.95rem,1.6vw,1.25rem)] opacity-70">{s.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </section>
   )
 }

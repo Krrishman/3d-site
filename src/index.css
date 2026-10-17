@@ -1,4 +1,5 @@
 @import '@fontsource-variable/manrope';
+@import '@fontsource/instrument-serif/400-italic.css';
 @import 'tailwindcss';
 
 @theme {
@@ -10,6 +11,7 @@
   --color-paper: #ffffff;
   --color-mist: #b7c2d3;
   --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -23,7 +25,8 @@ html {
   text-rendering: optimizeLegibility;
 }
 body { overflow-x: clip; font-size: 1.125rem; line-height: 1.55; }
-h1, h2, h3 { text-wrap: balance; letter-spacing: -0.03em; font-weight: 700; }
+h1, h2, h3 { text-wrap: balance; letter-spacing: -0.035em; font-weight: 300; }
+.accent { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
 p { text-wrap: pretty; }
 
 /* Lenis owns the scroll. */
@@ -36,7 +39,7 @@ html.lenis, html.lenis body { height: auto; }
 /* Buttons */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-  min-height: 3.25rem; padding-inline: 1.5rem; border-radius: 0.75rem;
+  min-height: 3.25rem; padding-inline: 1.6rem; border-radius: 999px;
   font-weight: 700; font-size: 1rem; line-height: 1; text-decoration: none; white-space: nowrap;
   transition: transform 140ms var(--ease-out), background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
@@ -54,7 +57,18 @@ html.lenis, html.lenis body { height: auto; }
   border-radius: 1rem;
   backdrop-filter: blur(10px);
 }
-.glow-teal { text-shadow: 0 0 24px rgba(36, 209, 194, 0.35); }
+.display { font-weight: 900; text-transform: uppercase; letter-spacing: -0.04em; line-height: 0.92; }
+.display-gradient { background: linear-gradient(180deg, #7e8ea6 0%, #ffffff 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.btn-gradient {
+  background: linear-gradient(123deg, #0b1220 0%, #2f80ed 45%, #24d1c2 100%);
+  box-shadow: 0 4px 4px rgba(47, 128, 237, 0.25), 4px 4px 12px rgba(36, 209, 194, 0.35) inset;
+  outline: 2px solid #ffffff; outline-offset: -3px; color: #fff; text-transform: uppercase; letter-spacing: 0.12em;
+}
+.btn-gradient:hover { filter: brightness(1.12); }
+.btn-outline { border: 2px solid var(--color-mist); color: var(--color-mist); text-transform: uppercase; letter-spacing: 0.12em; }
+.btn-outline:hover { background: rgba(215, 226, 234, 0.1); }
+.glow-teal { text-shadow: 0 0 28px rgba(36, 209, 194, 0.3); }
+.pill-nav { background: rgba(16, 26, 46, 0.55); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(14px); border-radius: 999px; }
 .eyebrow { color: var(--color-teal); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.8125rem; }
 
 /* Thin line that draws the section rhythm */

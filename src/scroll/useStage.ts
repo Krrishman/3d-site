@@ -11,7 +11,8 @@ export function useStage(ref: RefObject<HTMLElement | null>, index: number) {
       trigger: ref.current,
       start: 'top 60%',
       end: 'bottom 60%',
-      onUpdate: (self) => setStage(index + self.progress),
+      // Hold this section's keyframe while it is read; move only in its last third.
+      onUpdate: (self) => setStage(index + Math.max(0, (self.progress - 0.7) / 0.3)),
     })
     return () => t.kill()
   }, [ref, index, setStage])

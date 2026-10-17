@@ -50,14 +50,14 @@ function Dashboard() {
 
 export function Demo() {
   const root = useRef<HTMLElement>(null)
-  useStage(root, 3)
+  useStage(root, 5)
   useReveal(root)
   return (
     <section ref={root} id="demo" className="relative px-5 py-28 md:px-10 md:py-40">
       <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <p data-reveal className="eyebrow mb-4">{DEMO.kicker}</p>
-          <h2 data-reveal className="text-[clamp(2.25rem,4.5vw,4rem)] leading-[1]">{DEMO.title}</h2>
+          <h2 data-reveal className="text-[clamp(2.25rem,4.5vw,4rem)] leading-[1]">Contractor <span className="accent text-teal">lead dashboard</span></h2>
           <p data-reveal className="mt-6 text-lg text-mist">{DEMO.body}</p>
           <p data-reveal className="mt-6 font-semibold">The owner can:</p>
           <ul data-reveal className="mt-3 space-y-2 text-mist">

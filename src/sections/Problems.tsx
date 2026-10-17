@@ -12,7 +12,7 @@ import { PROBLEMS } from '../content'
 export function Problems() {
   const root = useRef<HTMLElement>(null)
   const reduced = useReducedMotion()
-  useStage(root, 1)
+  useStage(root, 2)
 
   useGSAP(
     () => {
@@ -43,11 +43,11 @@ export function Problems() {
   ]
 
   return (
-    <section ref={root} className="relative min-h-svh px-5 py-24 md:px-10 md:py-0">
+    <section ref={root} id="problems" className="relative min-h-svh px-5 py-24 md:px-10 md:py-0">
       <div className="grid min-h-svh grid-cols-1 items-center gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <h2 className="text-[clamp(2rem,4.2vw,3.75rem)] leading-[1.02]">
-            {PROBLEMS.headline[0]} <span className="text-mist">{PROBLEMS.headline[1]}</span>
+            {PROBLEMS.headline[0]} <span className="accent text-mist">{PROBLEMS.headline[1]}</span>
           </h2>
           <p className="mt-8 text-lg text-mist" data-order>{PROBLEMS.intro}</p>
           <ul className="mt-5 space-y-3">

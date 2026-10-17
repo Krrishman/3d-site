@@ -1,137 +1,163 @@
 import { useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { Environment, Float, Lightformer } from '@react-three/drei'
-import { damp, damp3, dampE } from 'maath/easing'
-import { BufferGeometry, CatmullRomCurve3, Color, Euler, Float32BufferAttribute, Vector3, type Group, type Mesh, type MeshStandardMaterial, type Points } from 'three'
+import { Environment, Lightformer } from '@react-three/drei'
+import { damp3, dampE } from 'maath/easing'
+import { Color, Euler, InstancedMesh, Matrix4, Object3D, Quaternion, Vector3, type Group } from 'three'
 import { useScene } from '../store/useScene'
 
-/** The F mark drawn as connected flowing tubes. */
-const STEM = [
-  [-1.0, -1.75, 0], [-1.0, -1.0, 0.06], [-1.0, 0.0, 0], [-1.0, 0.95, 0.04],
-  [-0.98, 1.4, 0], [-0.78, 1.62, 0.05], [-0.2, 1.66, 0.1], [0.6, 1.64, 0.04], [1.3, 1.6, 0],
-].map(([x, y, z]) => new Vector3(x, y, z))
-const BAR = [[-1.05, 0.22, 0], [-0.4, 0.26, 0.1], [0.3, 0.24, 0.06], [0.85, 0.2, 0]].map(([x, y, z]) => new Vector3(x, y, z))
+/**
+ * The ribbon: a stream of flat cards flowing along a wave. Each card is a
+ * lead moving through the system. Scroll pushes the wave along; the ribbon
+ * itself moves through per-section keyframes.
+ */
+const CARD_COUNT = 72
+const CARD_COLORS = ['#2f80ed', '#24d1c2', '#ffffff', '#8fb8ff', '#b7c2d3', '#2f80ed', '#24d1c2', '#ffffff'].map((c) => new Color(c))
+const CUBE_COUNT = 42
 
-/** Where the mark sits at each stage of the page. */
-type Key = { pos: [number, number, number]; rot: [number, number, number]; scale: number; bead: number; tint: number }
+type Key = { pos: [number, number, number]; rot: [number, number, number]; scale: number; amp: number; tint: number }
 const KEYS: Key[] = [
-  { pos: [3.6, -0.2, -0.4], rot: [0.15, -0.45, 0.05], scale: 1.1, bead: 0.08, tint: 0 }, // hero: right third
-  { pos: [2.4, 1.8, -7.5], rot: [0.7, 0.9, 0.3], scale: 1.15, bead: 0.25, tint: 0.3 }, // problems: far backdrop
-  { pos: [-3.3, -1.3, -3], rot: [0.2, 0.9, 0.1], scale: 0.9, bead: 0.45, tint: 0.6 }, // services: under the sticky title
-  { pos: [-3.4, 2.3, -5], rot: [0.4, -0.9, 0.35], scale: 0.7, bead: 0.6, tint: 1 }, // demo: small, upper left
-  { pos: [1.5, 2.4, -6.5], rot: [-0.4, 2.4, 0.1], scale: 0.9, bead: 0.8, tint: 0.5 }, // process: above the cards
-  { pos: [3.0, 0.1, -0.8], rot: [0.05, 0.1, 0], scale: 1.25, bead: 1, tint: 0 }, // close: large, right half
+  { pos: [0.8, 1.9, -1.4], rot: [0.35, -0.25, -0.12], scale: 1.0, amp: 0.9, tint: 0 }, // 0 hero: across the top, above the headline
+  { pos: [0, 3.2, -6], rot: [0.5, 0.1, 0], scale: 1.1, amp: 1.0, tint: 0.2 }, // 1 work: high backdrop
+  { pos: [0, 4.4, -9], rot: [0.6, 0.2, 0.05], scale: 1.0, amp: 0.6, tint: 0.3 }, // 2 problems: along the top edge, far
+  { pos: [0, 0, -9], rot: [0.6, 0.4, 0.1], scale: 1.0, amp: 1.0, tint: 0.4 }, // 3 services: hidden behind white
+  { pos: [0, 3.4, -5], rot: [0.4, -0.2, 0.1], scale: 1.0, amp: 1.0, tint: 0.6 }, // 4 projects: above the cards
+  { pos: [-3.0, 2.6, -5.5], rot: [0.5, -0.6, 0.2], scale: 0.7, amp: 0.9, tint: 1 }, // 5 demo: upper left
+  { pos: [0, -4.6, -5], rot: [0.9, 0.2, 0], scale: 1.0, amp: 0.8, tint: 0.8 }, // 6 about: along the bottom edge
+  { pos: [1.0, 2.6, -6.5], rot: [-0.3, 0.3, 0.1], scale: 0.9, amp: 1.1, tint: 0.5 }, // 7 process: above the cards
+  { pos: [0.5, -2.2, -1.5], rot: [0.5, -0.1, -0.1], scale: 1.0, amp: 0.7, tint: 0 }, // 8 close: lower half, under the copy
 ]
-const BLUE = new Color('#2f80ed')
-const TEAL = new Color('#24d1c2')
-
 function lerpKey(stage: number): Key {
   const i = Math.max(0, Math.min(KEYS.length - 2, Math.floor(stage)))
   const t = Math.max(0, Math.min(1, stage - i))
   const e = t * t * (3 - 2 * t)
   const a = KEYS[i], b = KEYS[i + 1]
-  const mix = (x: number, y: number) => x + (y - x) * e
+  const m = (x: number, y: number) => x + (y - x) * e
   return {
-    pos: [mix(a.pos[0], b.pos[0]), mix(a.pos[1], b.pos[1]), mix(a.pos[2], b.pos[2])],
-    rot: [mix(a.rot[0], b.rot[0]), mix(a.rot[1], b.rot[1]), mix(a.rot[2], b.rot[2])],
-    scale: mix(a.scale, b.scale),
-    bead: mix(a.bead, b.bead),
-    tint: mix(a.tint, b.tint),
+    pos: [m(a.pos[0], b.pos[0]), m(a.pos[1], b.pos[1]), m(a.pos[2], b.pos[2])],
+    rot: [m(a.rot[0], b.rot[0]), m(a.rot[1], b.rot[1]), m(a.rot[2], b.rot[2])],
+    scale: m(a.scale, b.scale), amp: m(a.amp, b.amp), tint: m(a.tint, b.tint),
   }
 }
 
-/** The drifting particle field, built once at module load. */
-const FLOW_GEOMETRY = (() => {
-  const n = 900
-  const pos = new Float32Array(n * 3)
-  let seed = 7
-  const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
-  for (let i = 0; i < n; i++) {
-    pos[i * 3] = (rnd() - 0.5) * 16
-    pos[i * 3 + 1] = (rnd() - 0.5) * 10
-    pos[i * 3 + 2] = -rnd() * 10
-  }
-  const g = new BufferGeometry()
-  g.setAttribute('position', new Float32BufferAttribute(pos, 3))
-  return g
-})()
+/** Seeded random so the layout is the same on every load. */
+function rng(seed: number) {
+  return () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
+}
 
-function Flow() {
-  const points = useRef<Points>(null)
-  const geometry = FLOW_GEOMETRY
-  useFrame((_, delta) => {
-    if (!points.current) return
-    const p = points.current.geometry.attributes.position as Float32BufferAttribute
-    const arr = p.array as Float32Array
-    for (let i = 0; i < arr.length; i += 3) {
-      arr[i] += delta * 0.35
-      if (arr[i] > 8) arr[i] = -8
+function Ribbon({ group }: { group: React.RefObject<Group | null> }) {
+  const mesh = useRef<InstancedMesh>(null)
+  const dummy = useMemo(() => new Object3D(), [])
+  const up = useMemo(() => new Vector3(0, 1, 0), [])
+  const q = useMemo(() => new Quaternion(), [])
+  const m4 = useMemo(() => new Matrix4(), [])
+  const phase = useRef(0)
+
+  useFrame((state, delta) => {
+    if (!mesh.current) return
+    const { stage } = useScene.getState()
+    const k = lerpKey(stage)
+    phase.current += delta * 0.25 + 0 // constant drift
+    const t0 = state.clock.elapsedTime
+    const flow = phase.current + stage * 1.6 // scroll pushes the stream along
+    for (let i = 0; i < CARD_COUNT; i++) {
+      const u = i / (CARD_COUNT - 1) // 0..1 along the ribbon
+      const x = (u - 0.5) * 16
+      const w = Math.sin(u * Math.PI * 2.2 - flow) * 1.1 * k.amp + Math.sin(u * Math.PI * 5.1 + t0 * 0.6) * 0.18
+      const z = Math.cos(u * Math.PI * 1.6 - flow * 0.7) * 1.4
+      // Tangent of the wave for orientation.
+      const du = 0.002
+      const x2 = (u + du - 0.5) * 16
+      const w2 = Math.sin((u + du) * Math.PI * 2.2 - flow) * 1.1 * k.amp + Math.sin((u + du) * Math.PI * 5.1 + t0 * 0.6) * 0.18
+      const z2 = Math.cos((u + du) * Math.PI * 1.6 - flow * 0.7) * 1.4
+      const tangent = new Vector3(x2 - x, w2 - w, z2 - z).normalize()
+      m4.lookAt(new Vector3(0, 0, 0), tangent, up)
+      q.setFromRotationMatrix(m4)
+      dummy.position.set(x, w, z)
+      dummy.quaternion.copy(q)
+      dummy.rotateY(Math.PI / 2)
+      dummy.rotateX(Math.sin(u * Math.PI * 3 - flow) * 0.35)
+      dummy.scale.setScalar(1)
+      dummy.updateMatrix()
+      mesh.current.setMatrixAt(i, dummy.matrix)
     }
-    p.needsUpdate = true
+    mesh.current.instanceMatrix.needsUpdate = true
+    if (group.current) {
+      damp3(group.current.position, k.pos, 0.4, delta)
+      dampE(group.current.rotation, new Euler(k.rot[0], k.rot[1], k.rot[2]), 0.4, delta)
+      damp3(group.current.scale, [k.scale, k.scale, k.scale], 0.4, delta)
+    }
+  })
+
+  // Per-card colours, set once.
+  const colors = useMemo(() => {
+    const arr = new Float32Array(CARD_COUNT * 3)
+    for (let i = 0; i < CARD_COUNT; i++) {
+      const c = CARD_COLORS[Math.floor(i / 3) % CARD_COLORS.length]
+      arr[i * 3] = c.r; arr[i * 3 + 1] = c.g; arr[i * 3 + 2] = c.b
+    }
+    return arr
+  }, [])
+
+  return (
+    <instancedMesh ref={mesh} args={[undefined, undefined, CARD_COUNT]} frustumCulled={false}>
+      <boxGeometry args={[0.16, 1.5, 1.0]}>
+        <instancedBufferAttribute attach="attributes-color" args={[colors, 3]} />
+      </boxGeometry>
+      <meshPhysicalMaterial vertexColors roughness={0.38} metalness={0.05} clearcoat={0.6} clearcoatRoughness={0.3} />
+    </instancedMesh>
+  )
+}
+
+function Cubes() {
+  const mesh = useRef<InstancedMesh>(null)
+  const dummy = useMemo(() => new Object3D(), [])
+  const seeds = useMemo(() => {
+    const r = rng(11)
+    return Array.from({ length: CUBE_COUNT }, () => ({ x: (r() - 0.5) * 18, y: (r() - 0.5) * 11, z: -r() * 7 - 0.5, s: 0.08 + r() * 0.16, rx: r() * 6, ry: r() * 6, sp: 0.1 + r() * 0.3 }))
+  }, [])
+  useFrame((state) => {
+    if (!mesh.current) return
+    const t = state.clock.elapsedTime
+    const { stage } = useScene.getState()
+    seeds.forEach((c, i) => {
+      dummy.position.set(c.x, c.y + Math.sin(t * c.sp + i) * 0.25 - stage * 0.6, c.z)
+      dummy.rotation.set(c.rx + t * c.sp, c.ry + t * c.sp * 0.7, 0)
+      dummy.scale.setScalar(c.s)
+      dummy.updateMatrix()
+      mesh.current!.setMatrixAt(i, dummy.matrix)
+    })
+    mesh.current.instanceMatrix.needsUpdate = true
   })
   return (
-    <points ref={points} geometry={geometry}>
-      <pointsMaterial color="#24d1c2" size={0.035} sizeAttenuation transparent opacity={0.55} depthWrite={false} />
-    </points>
+    <instancedMesh ref={mesh} args={[undefined, undefined, CUBE_COUNT]} frustumCulled={false}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="#9fb3cf" roughness={0.5} metalness={0.2} />
+    </instancedMesh>
   )
 }
 
 export function Experience() {
   const group = useRef<Group>(null)
-  const bead = useRef<Mesh>(null)
-  const beadMaterial = useRef<MeshStandardMaterial>(null)
-  const curve = useMemo(() => new CatmullRomCurve3(STEM, false, 'catmullrom', 0.5), [])
-  const bar = useMemo(() => new CatmullRomCurve3(BAR, false, 'catmullrom', 0.5), [])
   const aspect = useThree((s) => s.viewport.aspect)
-  const t = useRef(0)
-  const tint = useRef(new Color())
-
   useFrame((state, delta) => {
-    const { stage, pointer } = useScene.getState()
-    const k = lerpKey(stage)
-    const narrow = aspect < 1
-    if (group.current) {
-      const target: [number, number, number] = narrow ? [k.pos[0] * 0.25, k.pos[1] + 0.9, k.pos[2] - 0.6] : k.pos
-      damp3(group.current.position, target, 0.35, delta)
-      dampE(group.current.rotation, new Euler(k.rot[0] + pointer.y * 0.08, k.rot[1] + pointer.x * 0.15, k.rot[2]), 0.35, delta)
-      const s = k.scale * (narrow ? 0.62 : 1)
-      damp3(group.current.scale, [s, s, s], 0.35, delta)
-    }
-    t.current += (Math.min(0.999, k.bead) - t.current) * Math.min(1, delta * 3)
-    if (bead.current) bead.current.position.copy(curve.getPointAt(t.current))
-    tint.current.copy(BLUE).lerp(TEAL, k.tint)
-    if (beadMaterial.current) beadMaterial.current.emissive.copy(tint.current)
-    damp(state.camera.position, 'z', 7 - (stage > 4 ? (stage - 4) * 0.8 : 0), 0.4, delta)
+    const { pointer } = useScene.getState()
+    damp3(state.camera.position, [pointer.x * 0.25, -pointer.y * 0.15, aspect < 1 ? 10 : 8], 0.6, delta)
+    state.camera.lookAt(0, 0, 0)
   })
-
-  const body = { color: '#0d1830', metalness: 0.75, roughness: 0.18, clearcoat: 1, clearcoatRoughness: 0.15 }
-
   return (
     <>
-      <ambientLight intensity={0.25} />
-      <directionalLight position={[5, 6, 5]} intensity={1.8} color="#ffffff" />
-      <pointLight position={[-6, -2, 2]} intensity={40} color="#2f80ed" />
-      <pointLight position={[5, 3, 3]} intensity={30} color="#24d1c2" />
-      {/* Built-in environment: no network, just coloured light panels for reflections. */}
+      <hemisphereLight intensity={0.9} color="#dbe7ff" groundColor="#0b1220" />
+      <directionalLight position={[4, 8, 6]} intensity={2.2} color="#ffffff" />
+      <directionalLight position={[-6, -2, 4]} intensity={0.8} color="#24d1c2" />
       <Environment resolution={256} frames={1}>
-        <Lightformer form="rect" intensity={6} color="#24d1c2" position={[4, 3, -4]} scale={[6, 3, 1]} />
-        <Lightformer form="rect" intensity={5} color="#2f80ed" position={[-5, -2, -3]} scale={[6, 4, 1]} />
-        <Lightformer form="ring" intensity={4} color="#ffffff" position={[0, 6, -2]} scale={4} />
+        <Lightformer form="rect" intensity={3} color="#ffffff" position={[0, 6, -2]} scale={[12, 4, 1]} />
+        <Lightformer form="rect" intensity={2} color="#24d1c2" position={[6, 0, -4]} scale={[4, 6, 1]} />
+        <Lightformer form="rect" intensity={2} color="#2f80ed" position={[-6, -1, -4]} scale={[4, 6, 1]} />
       </Environment>
-      <Flow />
-      <Float speed={1} rotationIntensity={0.12} floatIntensity={0.35}>
-        <group ref={group} position={[2.5, -0.1, 0]} scale={1.15}>
-          <mesh><tubeGeometry args={[curve, 320, 0.19, 32, false]} /><meshPhysicalMaterial {...body} /></mesh>
-          <mesh><tubeGeometry args={[bar, 120, 0.19, 32, false]} /><meshPhysicalMaterial {...body} /></mesh>
-          {[[1.3, 1.6, 0], [0.85, 0.2, 0], [-1.0, -1.75, 0]].map((p, i) => (
-            <mesh key={i} position={p as [number, number, number]}><sphereGeometry args={[0.19, 24, 24]} /><meshPhysicalMaterial {...body} /></mesh>
-          ))}
-          <mesh ref={bead}>
-            <sphereGeometry args={[0.3, 48, 48]} />
-            <meshStandardMaterial ref={beadMaterial} color="#9fd8ff" emissive="#2f80ed" emissiveIntensity={2.2} toneMapped={false} />
-          </mesh>
-        </group>
-      </Float>
+      <Cubes />
+      <group ref={group} position={[0.6, 1.0, -1.2]}>
+        <Ribbon group={group} />
+      </group>
     </>
   )
 }

@@ -1,15 +1,11 @@
-import { EffectComposer, Bloom, Noise, Vignette, ChromaticAberration } from '@react-three/postprocessing'
-import { Vector2 } from 'three'
-
-const CA = new Vector2(0.0008, 0.0008)
+import { EffectComposer, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 
 export function Effects() {
   return (
     <EffectComposer multisampling={0}>
-      <Bloom intensity={1.1} luminanceThreshold={0.55} luminanceSmoothing={0.25} mipmapBlur />
-      <ChromaticAberration offset={CA} radialModulation modulationOffset={0.6} />
-      <Noise opacity={0.045} />
-      <Vignette eskil={false} offset={0.15} darkness={0.85} />
+      <Bloom intensity={0.35} luminanceThreshold={0.9} luminanceSmoothing={0.2} mipmapBlur />
+      <Noise opacity={0.04} />
+      <Vignette eskil={false} offset={0.2} darkness={0.7} />
     </EffectComposer>
   )
 }

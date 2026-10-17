@@ -2,9 +2,12 @@ import { lazy, Suspense } from 'react'
 import { SmoothScroll } from './scroll/SmoothScroll'
 import { Nav } from './ui/Nav'
 import { Hero } from './sections/Hero'
+import { Work } from './sections/Work'
 import { Problems } from './sections/Problems'
 import { Services } from './sections/Services'
+import { Projects } from './sections/Projects'
 import { Demo } from './sections/Demo'
+import { About } from './sections/About'
 import { Process } from './sections/Process'
 import { Cta } from './sections/Cta'
 
@@ -19,9 +22,12 @@ export default function App() {
       <Nav />
       <main className="relative z-10">
         <Hero />
+        <Work />
         <Problems />
         <Services />
+        <Projects />
         <Demo />
+        <About />
         <Process />
         <Cta />
       </main>
