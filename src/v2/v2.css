@@ -1,0 +1,67 @@
+@import '@fontsource-variable/manrope';
+@import '@fontsource/instrument-serif/400-italic.css';
+@import 'tailwindcss';
+
+@theme {
+  --color-navy: #0b1220;
+  --color-ink: #070b14;
+  --color-blue: #2f80ed;
+  --color-teal: #24d1c2;
+  --color-paper: #ffffff;
+  --color-mist: #b7c2d3;
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root { color-scheme: dark; }
+body, #root { background: var(--color-ink); color: var(--color-paper); }
+html { background: var(--color-ink); color: var(--color-paper); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body { overflow-x: clip; font-size: 1.125rem; line-height: 1.5; }
+h1, h2, h3 { text-wrap: balance; letter-spacing: -0.04em; font-weight: 300; }
+.accent { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
+p { text-wrap: pretty; }
+
+/* Lenis owns the scroll. */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-autoToggle { transition-property: overflow; transition-duration: 1ms; transition-behavior: allow-discrete; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3.25rem; padding-inline: 1.6rem; border-radius: 999px; font-weight: 700; font-size: 1rem; line-height: 1; text-decoration: none; white-space: nowrap; transition: transform 140ms var(--ease-out), background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
+.btn:active { transform: scale(0.97); }
+.btn:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 3px; }
+.btn-primary { background: var(--color-paper); color: var(--color-ink); }
+.btn-primary:hover { background: #e6f7f5; box-shadow: 0 0 36px rgba(36, 209, 194, 0.35); }
+.btn-ghost { color: #fff; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(7, 11, 20, 0.25); backdrop-filter: blur(8px); }
+.btn-ghost:hover { border-color: rgba(36, 209, 194, 0.8); background: rgba(36, 209, 194, 0.1); }
+
+.glass { background: rgba(11, 18, 32, 0.42); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; backdrop-filter: blur(14px); }
+.glass-solid { background: rgba(9, 15, 27, 0.97); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; }
+.eyebrow { color: var(--color-teal); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.75rem; }
+.pill-nav { background: rgba(7, 11, 20, 0.45); border: 1px solid rgba(255, 255, 255, 0.08); backdrop-filter: blur(16px); border-radius: 999px; }
+.display { font-weight: 800; letter-spacing: -0.05em; line-height: 0.9; }
+.glow-teal { text-shadow: 0 0 32px rgba(36, 209, 194, 0.35); }
+.scrim { background: linear-gradient(180deg, rgba(7, 11, 20, 0) 0%, rgba(7, 11, 20, 0.55) 50%, rgba(7, 11, 20, 0) 100%); }
+
+/* Demo UI */
+.ui { font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.ui-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.ui-chip { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.ui-chip-new { background: rgba(47, 128, 237, 0.22); color: #9cc4ff; }
+.ui-chip-contacted { background: rgba(255, 196, 61, 0.18); color: #ffd97a; }
+.ui-chip-quoted { background: rgba(167, 139, 250, 0.2); color: #cdbcff; }
+.ui-chip-booked { background: rgba(36, 209, 194, 0.2); color: #7ff0e5; }
+.ui-chip-completed { background: rgba(255, 255, 255, 0.1); color: #cbd5e1; }
+.ui-button { display: inline-flex; align-items: center; justify-content: center; min-height: 2.5rem; padding: 0 0.9rem; border-radius: 0.5rem; background: var(--color-blue); color: #fff; font-weight: 700; border: 0; cursor: pointer; white-space: nowrap; transition: transform 140ms var(--ease-out), background-color 180ms ease; }
+.ui-button:hover { background: #3b8bf5; }
+.ui-button:active { transform: scale(0.97); }
+.ui-button[disabled] { background: rgba(255, 255, 255, 0.12); color: var(--color-mist); cursor: default; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-rise] { opacity: 0; transform: translateY(22px); animation: rise 900ms var(--ease-out) forwards; animation-delay: calc(var(--i, 0) * 110ms + 300ms); }
+}
+@keyframes rise { to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

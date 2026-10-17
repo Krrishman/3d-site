@@ -2,6 +2,18 @@
 
 A smooth-scroll 3D marketing site. Vite, React 19, TypeScript, Tailwind v4.
 
+## Two sites in one project
+
+- `index.html` + `src/` is the original site. Treat it as a frozen backup:
+  do not restyle or rewrite it unless asked.
+- `v2/index.html` + `src/v2/` is the current site. It is self-contained (own
+  scroll, store, scene, sections, CSS) and only shares `src/renders.generated.ts`
+  and `public/renders`. Build both with `npm run build`; preview the new one at
+  `/v2/`.
+- The v2 background is a generated film cut into frames (`public/v2/frames`),
+  scrubbed by scroll in `src/v2/scene/Frames.tsx`. Regenerate it with
+  `scripts/generate-background.mjs` (Kie.ai, needs `KIE_API_KEY`).
+
 ## Stack and who owns what
 
 - **Scroll:** Lenis owns scrolling. GSAP's ticker drives Lenis and every Lenis
