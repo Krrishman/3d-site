@@ -157,7 +157,7 @@ export function River() {
     fetch(`${import.meta.env.BASE_URL}v6/frames/manifest.json`).then((r) => (r.ok ? r.json() : null)).then((m) => {
       if (!m || cancelled) return
       frames = m.frames; perSheet = m.perSheet
-      const count = frames / perSheet
+      const count = Math.ceil(frames / perSheet)
       sheets = Array(count).fill(null)
       let next = 0
       const load = (i: number) => new Promise<void>((resolve) => { const img = new Image(); img.decoding = 'async'; img.onload = () => { if (!cancelled) sheets[i] = img; resolve() }; img.onerror = () => resolve(); img.src = `${import.meta.env.BASE_URL}v6/frames/${set}/s${String(i).padStart(3, '0')}.webp` })
@@ -167,6 +167,8 @@ export function River() {
     const has = (i: number) => Boolean(sheets[Math.floor(i / perSheet)])
     const uploadSheet = (slot: number, idx: number) => { if (shown[slot] === idx || !sheets[idx]) return; gl.activeTexture(gl.TEXTURE0 + 1 + slot); gl.bindTexture(gl.TEXTURE_2D, sheetTex[slot]); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, sheets[idx]!); shown[slot] = idx }
     let maxScroll = 8, tick = 0
+    // Debug probe, read from the console as __river().
+    ;(window as unknown as { __river: () => unknown }).__river = () => ({ frames, followOn, videoReady, dark, loaded: sheets.filter(Boolean).length, readyState: video.readyState, paused: video.paused, maxScroll })
     const measure = () => { maxScroll = Math.max(1, (document.documentElement.scrollHeight - innerHeight) / innerHeight); gl.uniform1f(uMaxScroll, maxScroll) }
     // Pointer, -1..1 from the centre, eased per frame.
     let tx = 0, ty = 0, sx = 0, sy = 0
