@@ -24,15 +24,15 @@ export function About() {
               <circle cx="54" cy="54" r="5" fill="var(--accent)" />
             </svg>
           </div>
-          <dl className="about-facts">
-            {ABOUT.facts.map((f) => (
-              <div key={f.label} data-reveal>
-                <dt className="small muted">{f.label}</dt>
-                <dd>{f.value}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
+        <dl className="about-facts">
+          {ABOUT.facts.map((f) => (
+            <div key={f.label} data-reveal>
+              <dt className="small muted">{f.label}</dt>
+              <dd>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   )

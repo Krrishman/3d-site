@@ -10,27 +10,34 @@ npm run dev
 
 See `CLAUDE.md` for the architecture and conventions.
 
-## Three versions
+## Versions
 
-- `/` is the original site (`src/`). It is kept as a backup and is not being changed.
-- `/v2/` (`src/v2/`): dark, with a scroll-scrubbed film background, dust
-  particles that part around the pointer, and much shorter copy.
-- `/plumbing/` (`src/plumbing/`): the light editorial template, frozen as a
-  starting point for a separate plumbing client's site. Do not change it.
-- `/v4/` (`src/v4/`): the current FlowForge site, built on that theme. A
-  full-bleed job-site photograph as the hero with a trade picker, a proper
-  navigation bar, work laid out like prints on a gallery wall, a questions
-  section and a contact form. Zodiak and Hanken Grotesk, self-hosted.
+- `/` is the original site (`src/`). Kept as a backup; not being changed.
+- `/v2/` (`src/v2/`): dark, with a scroll-scrubbed film background and dust particles.
+- `/plumbing/` (`src/plumbing/`): the light editorial site, kept for a separate
+  plumbing client. Do not change it unless that client asks.
+- `/v5/` (`src/v5/`): the current FlowForge site. Cinematic dark theme: a
+  looping molten-metal hero clip, blue-hour job-site photographs, a pinned
+  sideways run of work, a live lead-dashboard demo, questions and a contact form.
 
-## Generating the photographs
+## Generating the photographs (plumbing)
 
 ```sh
 KIE_API_KEY=your-key node scripts/generate-photos.mjs
 ```
 
-Writes the eight job-site and process photographs to `public/v4/photos/`
-(copy them to `public/plumbing/photos/` if that site needs them). The prompts
-live in the script; `--only hero-fence` regenerates one.
+Writes the eight job-site and process photographs to `public/plumbing/photos/`.
+
+## Generating the media (v5)
+
+```sh
+KIE_API_KEY=your-key node scripts/generate-v5-media.mjs
+```
+
+Generates the 10-second hero clip (Kling 2.6) and five blue-hour stills
+(Flux 2 Pro) into `public/v5/media/`, and cuts a web-sized loop and a poster
+frame from the clip with ffmpeg. The raw clip is ignored by git; the loop and
+poster are committed. `--only hero` or `--only van,desk` regenerates some.
 
 ## Generating the background (v2)
 

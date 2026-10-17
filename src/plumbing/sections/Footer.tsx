@@ -3,7 +3,7 @@ import { EMAIL, FOOTER, SITE } from '../content'
 /** The name first, at full width; then the ways to reach me; then the small print. */
 export function Footer() {
   return (
-    <footer className="footer field">
+    <footer className="footer band">
       <p className="footer-name" aria-label="FlowForge Digital">FlowForge Digital</p>
       <div className="footer-row">
         <ul className="footer-places">

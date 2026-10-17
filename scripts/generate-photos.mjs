@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * Generates the photographs for the v4 site with Kie.ai (Flux 2 Pro) into
- * public/v4/photos/. Same API as generate-assets.mjs, different manifest.
+ * Generates the photographs for the plumbing site with Kie.ai (Flux 2 Pro) into
+ * public/plumbing/photos/. Same API as generate-assets.mjs, different manifest.
  *
  *   KIE_API_KEY=... node scripts/generate-photos.mjs            # only missing
  *   KIE_API_KEY=... node scripts/generate-photos.mjs --force
@@ -12,7 +12,7 @@ import path from 'node:path'
 
 const API = 'https://api.kie.ai/api/v1/jobs'
 const MODEL = process.env.KIE_MODEL || 'flux-2/pro-text-to-image'
-const OUT_DIR = path.resolve('public/v4/photos')
+const OUT_DIR = path.resolve('public/plumbing/photos')
 const KEY = process.env.KIE_API_KEY
 const FORCE = process.argv.includes('--force')
 const onlyArg = process.argv.indexOf('--only')

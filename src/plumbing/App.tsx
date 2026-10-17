@@ -4,8 +4,9 @@ import { Hero } from './sections/Hero'
 import { Work } from './sections/Work'
 import { Services } from './sections/Services'
 import { Process } from './sections/Process'
+import { Questions } from './sections/Questions'
 import { About } from './sections/About'
-import { Cta } from './sections/Cta'
+import { Contact } from './sections/Contact'
 import { Footer } from './sections/Footer'
 
 export default function App() {
@@ -17,8 +18,9 @@ export default function App() {
         <Work />
         <Services />
         <Process />
+        <Questions />
         <About />
-        <Cta />
+        <Contact />
       </main>
       <Footer />
     </SmoothScroll>
