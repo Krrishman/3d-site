@@ -79,6 +79,9 @@ void main(){
     float sa = aspect / uVideoAspect;
     if (sa > 1.0) { vuv.y = (vuv.y - 0.5) / sa + 0.5; } else { vuv.x = (vuv.x - 0.5) * sa + 0.5; }
     vec3 film = texture2D(uVideo, clamp(vuv, 0.0, 1.0)).rgb;
+    // A soft shade where the headline and buttons sit, so the type reads over the lava.
+    float shade = smoothstep(0.38, 1.0, py) * (1.0 - smoothstep(0.35, 0.75, uv.x)) * 0.62;
+    film = mix(film, uBg, shade);
     float hand = smoothstep(0.80, 1.02, py);
     col = mix(film, col, hand);
   }
