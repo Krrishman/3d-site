@@ -185,7 +185,7 @@ export function River() {
     gl.uniform1i(uVideo, 0); gl.uniform1f(uHasVideo, 0); gl.uniform1f(uVideoAspect, 16 / 9)
     let videoReady = false, dark = false
     const poster = new Image(); poster.src = `${import.meta.env.BASE_URL}v6/media/hero-poster.jpg`
-    poster.onload = () => { if (!videoReady) { gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, poster); gl.uniform1f(uVideoAspect, poster.width / poster.height); videoReady = true; gl.uniform1f(uHasVideo, dark ? 1 : 0) } }
+    poster.onload = () => { if (!videoReady) { gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, poster); gl.uniform1f(uVideoAspect, poster.width / poster.height); videoReady = true; gl.uniform1f(uHasVideo, dark ? 1 : 0) } }
     video.addEventListener('loadeddata', () => { gl.uniform1f(uVideoAspect, video.videoWidth / video.videoHeight) })
     if (!reduced) video.play().catch(() => { /* poster stays */ })
     const onVis = () => { if (reduced) return; if (document.hidden) video.pause(); else video.play().catch(() => {}) }
@@ -231,7 +231,7 @@ export function River() {
         }
       }
       if (dark && !reduced && video.readyState >= 3 && !video.paused && !video.seeking) {
-        gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video)
+        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video)
         if (!videoReady) { videoReady = true; gl.uniform1f(uHasVideo, 1) }
       }
       gl.drawArrays(gl.TRIANGLES, 0, 3)
