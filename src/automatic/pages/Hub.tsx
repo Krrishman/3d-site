@@ -44,7 +44,7 @@ export function Hub() {
           {DIVISIONS.map((dv, n) => (
             <li key={dv.id} className="div-card">
               <a href={href(dv.id)} className="div-link">
-                <div className="div-pic" data-shutter><img src={dv.hero} alt={dv.heroAlt} width={1200} height={800} loading="lazy" /></div>
+                <div className="div-pic"><img src={dv.hero} alt={dv.heroAlt} width={1200} height={800} loading="lazy" /></div>
                 <div className="div-body" data-reveal>
                   <div className="div-row"><span className="small muted-dark">0{n + 1}</span><h3 className="div-title">{dv.name.join(' ')}</h3></div>
                   <ul className="div-stats small">{dv.stats.slice(0, 2).map((s) => <li key={s.label}><strong>{s.value}</strong> {s.label}</li>)}</ul>

@@ -56,7 +56,7 @@ export function DivisionPage({ d }: { d: Division }) {
           <ul className="points" data-reveal>{d.includes.map((x) => <li key={x}>{x}</li>)}</ul>
         </div>
         <div className="gallery">
-          {d.gallery.map((g) => <figure key={g.src} className="gallery-item" data-shutter><img src={g.src} alt={g.alt} width={1500} height={1000} loading="lazy" /></figure>)}
+          {d.gallery.map((g) => <figure key={g.src} className="gallery-item"><img src={g.src} alt={g.alt} width={1500} height={1000} loading="lazy" /></figure>)}
         </div>
       </section>
 
