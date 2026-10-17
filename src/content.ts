@@ -72,7 +72,8 @@ export const CTA = {
 }
 
 /** A generated render when scripts/generate-assets.mjs has produced it, else the placeholder. */
-const render = (id: string, fallback: string) => RENDERS[id] ?? fallback
+const render = (id: string, fallback: string) =>
+  RENDERS[id] ? import.meta.env.BASE_URL + RENDERS[id].replace(/^\//, "") : fallback
 
 /**
  * PLACEHOLDERS. These preview tiles and project images come from the
