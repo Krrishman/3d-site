@@ -18,8 +18,8 @@ export function Bar({ current }: { current: string }) {
         <span>{GROUP.name}</span>
       </a>
       <nav className="bar-links" aria-label="Divisions">
-        {DIVISIONS.map((d) => <a key={d.id} href={href(d.id)} className={current === d.id ? 'is-current' : ''} onClick={() => setOpen(false)}>{d.nav}</a>)}
-        <a href={GROUP.phoneHref} className="button bar-links-action">{GROUP.phone}</a>
+        {DIVISIONS.map((d) => <a key={d.id} href={href(d.id)} className={current === d.id ? 'is-current' : ''} onClick={() => setOpen(false)}><span className="nav-short">{d.nav}</span><span className="nav-full">{d.name.join(' ')}</span></a>)}
+        <a href="#contact" className="button bar-links-action" onClick={() => setOpen(false)}>{GROUP.cta}</a>
       </nav>
       <a href="#contact" className="button bar-action">{GROUP.cta}</a>
       <button type="button" className="bar-menu" aria-expanded={open} onClick={() => setOpen((o) => !o)}>{open ? 'Close' : 'Menu'}</button>
