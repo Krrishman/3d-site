@@ -9,7 +9,7 @@ export function routeFromHash(): string {
 export function useRoute() {
   const [route, setRoute] = useState(routeFromHash)
   useEffect(() => {
-    const on = () => { setRoute(routeFromHash()); window.scrollTo(0, 0) }
+    const on = () => setRoute(routeFromHash())
     addEventListener('hashchange', on)
     return () => removeEventListener('hashchange', on)
   }, [])
