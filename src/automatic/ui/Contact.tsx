@@ -16,6 +16,7 @@ export function Contact({ preset }: { preset?: string }) {
       <div className="contact-words">
         <h2 className="contact-heading" data-reveal>{CONTACT.heading[0]}<br />{CONTACT.heading[1]}</h2>
         <p className="contact-sentence lead" data-reveal>{CONTACT.sentence}</p>
+        <ul className="points" data-reveal>{CONTACT.points.map((x) => <li key={x}>{x}</li>)}</ul>
         <p className="contact-or" data-reveal>Or call <a href={GROUP.phoneHref} className="link">{GROUP.phone}</a></p>
       </div>
       <form className="contact-form" data-ui data-reveal onSubmit={(e) => { e.preventDefault(); window.location.href = mail }}>

@@ -1,15 +1,15 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useReveal } from '../scroll/useReveal'
+import { useWords } from '../scroll/useWords'
 import { GROUP, type Division } from '../content'
 import { href } from '../router'
 import { Contact } from '../ui/Contact'
 
-/** One division: its hero, the numbers, what it does, how a job runs, two pictures, a word from a client, the form. */
+/** One division: hero, statement and figures, six services, what is included, two pictures, how a job runs, questions, the form. */
 export function DivisionPage({ d }: { d: Division }) {
-  const stats = useRef<HTMLElement>(null)
-  const services = useRef<HTMLElement>(null)
-  const process = useRef<HTMLElement>(null)
-  useReveal(stats); useReveal(services); useReveal(process)
+  const a = useRef<HTMLElement>(null), b = useRef<HTMLElement>(null), c = useRef<HTMLElement>(null), e = useRef<HTMLElement>(null), f = useRef<HTMLElement>(null)
+  useReveal(a); useReveal(b); useReveal(c); useReveal(e); useReveal(f); useWords(a)
+  const [open, setOpen] = useState(0)
   const i = (n: number) => ({ '--i': n } as React.CSSProperties)
   return (
     <>
@@ -31,35 +31,66 @@ export function DivisionPage({ d }: { d: Division }) {
         </div>
       </section>
 
-      <section ref={stats} className="stats">
-        <p className="stats-intro lead" data-reveal>{d.intro}</p>
+      <section ref={a} className="stats">
+        <p className="statement-words statement-words-sm" data-words>{d.intro}</p>
         <dl className="stats-row">
-          {d.stats.map((s) => <div key={s.label} data-reveal><dt className="stat-value">{s.value}</dt><dd className="small muted">{s.label}</dd></div>)}
+          {d.stats.map((s) => <div key={s.label} className="stat" data-reveal><dt className="stat-value">{s.value}</dt><dd className="small muted">{s.label}</dd></div>)}
         </dl>
       </section>
 
-      <section ref={services} className="services">
-        <div className="services-open">
-          <h2 className="services-statement" data-reveal>What we do</h2>
-          <p className="services-intro lead" data-reveal>{d.intro2}</p>
+      <section ref={b} className="services">
+        <div className="section-head">
+          <h2 className="h-section" data-reveal>What we do</h2>
+          <p className="lead" data-reveal>{d.intro2}</p>
         </div>
         <ul className="svc-grid">
-          {d.services.map((s) => <li key={s.title} className="svc" data-reveal><h3 className="svc-title">{s.title}</h3><p className="svc-body">{s.body}</p></li>)}
+          {d.services.map((s, n) => <li key={s.title} className="svc" data-reveal><span className="svc-n small muted">0{n + 1}</span><h3 className="svc-title">{s.title}</h3><p className="svc-body">{s.body}</p></li>)}
         </ul>
+      </section>
+
+      <section ref={c} className="includes band">
+        <div className="includes-grid">
+          <div>
+            <h2 className="h-section" data-reveal>What every project includes</h2>
+            <p className="lead" data-reveal>Service area: {d.areas}</p>
+          </div>
+          <ul className="points" data-reveal>{d.includes.map((x) => <li key={x}>{x}</li>)}</ul>
+        </div>
         <div className="gallery">
-          {d.gallery.map((g) => <figure key={g.src} className={`gallery-${g.ratio}`} data-shutter><img src={g.src} alt={g.alt} width={g.ratio === 'portrait' ? 900 : 1500} height={g.ratio === 'portrait' ? 1200 : 1000} loading="lazy" /></figure>)}
+          {d.gallery.map((g) => <figure key={g.src} className="gallery-item" data-shutter><img src={g.src} alt={g.alt} width={1500} height={1000} loading="lazy" /></figure>)}
         </div>
       </section>
 
-      <section ref={process} className="process-simple">
-        <h2 className="process-heading" data-reveal>How a job runs</h2>
+      <section ref={e} className="process-simple">
+        <div className="section-head">
+          <h2 className="h-section" data-reveal>How a job runs</h2>
+          {d.quote && <blockquote className="quote" data-reveal><p>“{d.quote.text}”</p><footer className="small muted">{d.quote.who}</footer></blockquote>}
+        </div>
         <ol className="steps">
-          {d.process.map((p) => <li key={p.lead} className="step" data-reveal><p><strong>{p.lead}</strong> {p.body}</p></li>)}
+          {d.process.map((p, n) => <li key={p.lead} className="step" data-reveal><span className="step-n">0{n + 1}</span><p><strong>{p.lead}</strong> {p.body}</p></li>)}
         </ol>
-        {d.quote && <blockquote className="quote" data-reveal><p>“{d.quote.text}”</p><footer className="small muted">{d.quote.who}</footer></blockquote>}
-        <p className="division-links small" data-reveal>
-          <a href={d.contact.phoneHref} className="link">{d.contact.phone}</a> · <a href={`mailto:${d.contact.email}`} className="link">{d.contact.email}</a> · <a href={d.external} className="link" target="_blank" rel="noreferrer">Current {d.brand} site</a>
-        </p>
+      </section>
+
+      <section ref={f} className="questions">
+        <div className="section-head">
+          <h2 className="h-section" data-reveal>Questions we are asked</h2>
+          <p className="division-links small" data-reveal>
+            <a href={d.contact.phoneHref} className="link">{d.contact.phone}</a> · <a href={`mailto:${d.contact.email}`} className="link">{d.contact.email}</a> · <a href={d.external} className="link" target="_blank" rel="noreferrer">Current {d.brand} site</a>
+          </p>
+        </div>
+        <ul className="qa">
+          {d.faq.map((it, n) => {
+            const isOpen = open === n
+            return (
+              <li key={it.q} className={`qa-item${isOpen ? ' is-open' : ''}`} data-reveal>
+                <button type="button" className="qa-q" aria-expanded={isOpen} aria-controls={`qa-${n}`} id={`qa-btn-${n}`} onClick={() => setOpen(isOpen ? -1 : n)}>
+                  <span className="qa-text">{it.q}</span><span className="qa-plus" aria-hidden="true" />
+                </button>
+                <div id={`qa-${n}`} role="region" aria-labelledby={`qa-btn-${n}`} className="qa-a" hidden={!isOpen}><p>{it.a}</p></div>
+              </li>
+            )
+          })}
+        </ul>
       </section>
 
       <Contact preset={d.id} />
